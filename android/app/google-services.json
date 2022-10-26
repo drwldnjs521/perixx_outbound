@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "433585274613",
+    "project_id": "perixx-outbound-auth",
+    "storage_bucket": "perixx-outbound-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433585274613:android:f3393f5333a26fbf0dcfbc",
+        "android_client_info": {
+          "package_name": "com.perixx.perixx_outbound"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433585274613-pavqn6fh3tgb3m94asiaamtok1j3qhlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE0SEZ-qssXx-QyTIM-pqDKGSDhnpfe0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433585274613-pavqn6fh3tgb3m94asiaamtok1j3qhlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
