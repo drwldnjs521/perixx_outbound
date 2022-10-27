@@ -27,3 +27,10 @@ class UserNotLoggedInAuthExeption implements Exception {
     return "User Not Logged In";
   }
 }
+
+class UserHasAlreadyAUserNameException implements Exception {
+  @override
+  String toString() {
+    return "User has already a Username";
+  }
+}

@@ -8,13 +8,13 @@ class FirebaseAuthRepository {
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      _updateUserName(user);
       return AuthUser.fromFirebase(user);
     } else {
       return null;
     }
   }
 
-  @override
   Future<AuthUser> logIn({
     required String email,
     required String password,
@@ -43,7 +43,6 @@ class FirebaseAuthRepository {
     }
   }
 
-  @override
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -54,7 +53,16 @@ class FirebaseAuthRepository {
     }
   }
 
-  @override
+  Future<void> _updateUserName(User user) async {
+    final userName = user.email!.split("@")[0];
+    if (user.displayName == null) {
+      await user.updateDisplayName(userName);
+      return;
+    } else {
+      throw UserHasAlreadyAUserNameException();
+    }
+  }
+
   Future<void> initialize() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,

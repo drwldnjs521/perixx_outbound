@@ -40,6 +40,8 @@ dependencies:
   firebase_auth: ^4.0.2
   firebase_analytics: ^10.0.2
   modal_progress_hud_nsn: ^0.3.0
+  mysql_client: ^0.0.27
+ 
 
 dev_dependencies:
   flutter_test:

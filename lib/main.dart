@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:perixx_outbound/Application/auth_service.dart';
 import 'package:perixx_outbound/Presentation/login_view.dart';
-import 'package:perixx_outbound/Presentation/orders_view.dart';
+import 'package:perixx_outbound/Presentation/order_list_view.dart';
 import 'package:perixx_outbound/constants/routes.dart';
 
 void main() {
@@ -9,6 +9,7 @@ void main() {
   runApp(MaterialApp(
       routes: {
         loginRoute: (context) => const LoginView(),
+        orderListRoute: (context) => const OrderListView(),
       },
       title: 'Perixx Outbound',
       debugShowCheckedModeBanner: false,

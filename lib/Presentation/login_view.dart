@@ -4,7 +4,6 @@ import 'package:perixx_outbound/Application/auth_service.dart';
 import 'package:perixx_outbound/Domain/auth_user.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/error_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -217,12 +216,10 @@ class _LoginViewState extends State<LoginView> {
                           );
                           final currentUser =
                               AuthService.firebase().currentUser;
-                          if (currentUser?. != null) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              orderListRoute,
-                              (route) => false,
-                            );
-                          }
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            orderListRoute,
+                            (route) => false,
+                          );
                         } on UserNotFoundAuthException catch (e) {
                           await showErrorDialog(
                             context,
