@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:perixx_outbound/Application/auth_service.dart';
+import 'package:perixx_outbound/Presentation/enums/menu_actions.dart';
+import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
+import 'package:perixx_outbound/constants/routes.dart';
 
 class OrderListView extends StatefulWidget {
   const OrderListView({super.key});
@@ -16,26 +20,72 @@ class _OrderListViewState extends State<OrderListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Hi, $userName",
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 20,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "In/Outbound",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black87),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.fromLTRB(0.0, 1.0, 0.0, 1.0),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/perixx_profile.jpg"),
             ),
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-
-          leading: IconButton(
-            iconSize: 50,
-            color: Colors.grey,
-            icon: const Icon(Icons.person_rounded),
-            onPressed: () {},
-          ),
-          // add more IconButton
         ),
-        body: ListView(children: [
+        leadingWidth: 80,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              // Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
+            },
+            icon: const Icon(CupertinoIcons.barcode_viewfinder),
+          ),
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  final shouldLogout = await showLogOutDialog(
+                    context,
+                    userName,
+                  );
+                  if (shouldLogout) {
+                    await AuthService.firebase().logOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      loginRoute,
+                      (_) => false,
+                    );
+                  }
+              }
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.logout, child: Text("LOGOUT")),
+              ];
+            },
+          ),
+        ],
+      ),
+
+      // leading: IconButton(
+      //   iconSize: 50,
+      //   color: Colors.grey,
+      //   icon: const Icon(Icons.person_rounded),
+      //   onPressed: () {},
+      // ),
+      // add more IconButton
+
+      body: ListView(
+        children: [
           GestureDetector(
             onTap: () {
               //showPopup("33310", "11111","assets/keyboard2.jpg");
@@ -55,7 +105,7 @@ class _OrderListViewState extends State<OrderListView> {
                     child: Text(
                       "Order# : 33310",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -67,7 +117,7 @@ class _OrderListViewState extends State<OrderListView> {
                     child: Text(
                       "Order date : 20.04.22",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -79,7 +129,7 @@ class _OrderListViewState extends State<OrderListView> {
                     child: Text(
                       "Price : 111.99",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -106,7 +156,7 @@ class _OrderListViewState extends State<OrderListView> {
                               child: Text(
                                 "33333",
                                 style: TextStyle(
-                                    fontSize: 30,
+                                    fontSize: 10,
                                     color: _hasBeenPressed1
                                         ? Colors.redAccent.shade700
                                         : Colors.black),
@@ -120,7 +170,7 @@ class _OrderListViewState extends State<OrderListView> {
                             child: Text(
                               "Periboard-718",
                               style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 10,
                               ),
                             ),
                           ),
@@ -131,7 +181,7 @@ class _OrderListViewState extends State<OrderListView> {
                             child: Text(
                               "45.99",
                               style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 10,
                               ),
                             ),
                           ),
@@ -158,7 +208,7 @@ class _OrderListViewState extends State<OrderListView> {
                               child: Text(
                                 "14893",
                                 style: TextStyle(
-                                    fontSize: 30,
+                                    fontSize: 10,
                                     color: _hasBeenPressed
                                         ? Colors.redAccent.shade700
                                         : Colors.black),
@@ -172,7 +222,7 @@ class _OrderListViewState extends State<OrderListView> {
                             child: Text(
                               "Periboard-609",
                               style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 10,
                               ),
                             ),
                           ),
@@ -183,7 +233,7 @@ class _OrderListViewState extends State<OrderListView> {
                             child: Text(
                               "68.99",
                               style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 10,
                               ),
                             ),
                           ),
@@ -211,7 +261,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Order# : 33311",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -223,7 +273,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Order date : 20.04.22",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -235,7 +285,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Price : 66.99",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -257,7 +307,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "15698",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -268,7 +318,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "Perimice-618",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -279,7 +329,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "19.99",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -299,7 +349,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "33333",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -310,7 +360,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "Periboard-718",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -321,7 +371,7 @@ class _OrderListViewState extends State<OrderListView> {
                       child: Text(
                         "45.99",
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -349,7 +399,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Order# : 33312",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -361,7 +411,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Order date : 20.04.22",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -373,7 +423,7 @@ class _OrderListViewState extends State<OrderListView> {
                   child: Text(
                     "Price : 111.99",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10,
                     ),
                   ),
                 ),
@@ -394,7 +444,7 @@ class _OrderListViewState extends State<OrderListView> {
                           child: Text(
                             "33333",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -405,7 +455,7 @@ class _OrderListViewState extends State<OrderListView> {
                           child: Text(
                             "Periboard-718",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -416,7 +466,7 @@ class _OrderListViewState extends State<OrderListView> {
                           child: Text(
                             "45.99",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -434,6 +484,8 @@ class _OrderListViewState extends State<OrderListView> {
               ],
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
