@@ -27,5 +27,5 @@ Please visit the link to follow up the project : [Jeewon's Bachelor thesis](http
 - [ ] Riverpod Architecture (Gedanken machen, ob die Architektur notwendig ist und warum sie für dieses Projekt besser geeignet ist als andere Architekturen) 
 - [ ] weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf können die Besprechungen auch häufiger stattfinden.
 
-==Nächste Besprechung : am 14.11.2022 um 14:00 Uhr==
+<mark> Nächste Besprechung : am 14.11.2022 um 14:00 Uhr </mark>
 
