@@ -16,3 +16,16 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference. -->
 
 Please visit the link to follow up the project : [Jeewon's Bachelor thesis](https://drwldnjs521.github.io)
+
+**Zusammenfassung der Besprechung am 31.10.2022**
+
+- Zum "ODERLIST" sind 'Date range picker' und 'dropdown' Widgets notwendig.
+- Implementierung von "flutter_localizations" für verschiedene Spracheinstellungen.
+- Continuous Integration (CI)
+- Zur besseren Veranschaulichung ist es empfehlenswert, alle möglichen Anforderungen zu dokumentieren und wie sie umgesetzt werden können .
+(Pflicht- und Lastenheft)
+- Riverpod Architecture (Gedanken machen, ob die Architektur notwendig ist und warum sie für dieses Projekt besser geeignet ist als andere Architekturen) 
+- weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf können die Besprechungen auch häufiger stattfinden.
+
+Nächste Besprechung : am 14.11.2022 um 14:00 Uhr
+

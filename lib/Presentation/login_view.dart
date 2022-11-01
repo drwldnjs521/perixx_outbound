@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:perixx_outbound/Application/auth_exceptions.dart';
 import 'package:perixx_outbound/Application/auth_service.dart';
-import 'package:perixx_outbound/Domain/auth_user.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/error_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
 
@@ -21,11 +20,12 @@ class _LoginViewState extends State<LoginView> {
   //declare a Globalkey
   final _formkey = GlobalKey<FormState>();
 
-  void _tryValidation() {
+  bool _tryValidation() {
     final isValid = _formkey.currentState!.validate();
     if (isValid) {
       _formkey.currentState!.save();
     }
+    return isValid;
   }
 
   @override
@@ -208,33 +208,32 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     child: GestureDetector(
                       onTap: () async {
-                        _tryValidation();
-                        try {
-                          await AuthService.firebase().logIn(
-                            email: _email,
-                            password: _password,
-                          );
-                          final currentUser =
-                              AuthService.firebase().currentUser;
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            orderListRoute,
-                            (route) => false,
-                          );
-                        } on UserNotFoundAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "ERROR: ${e.toString().toUpperCase()}",
-                          );
-                        } on WrongPasswordAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "ERROR: ${e.toString().toUpperCase()}",
-                          );
-                        } on GenericAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "ERROR: ${e.toString().toUpperCase()}",
-                          );
+                        if (_tryValidation()) {
+                          try {
+                            await AuthService.firebase().logIn(
+                              email: _email,
+                              password: _password,
+                            );
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              orderListRoute,
+                              (route) => false,
+                            );
+                          } on UserNotFoundAuthException catch (e) {
+                            await showErrorDialog(
+                              context,
+                              "ERROR: ${e.toString().toUpperCase()}",
+                            );
+                          } on WrongPasswordAuthException catch (e) {
+                            await showErrorDialog(
+                              context,
+                              "ERROR: ${e.toString().toUpperCase()}",
+                            );
+                          } on GenericAuthException catch (e) {
+                            await showErrorDialog(
+                              context,
+                              "ERROR: ${e.toString().toUpperCase()}",
+                            );
+                          }
                         }
                       },
                       child: Container(
