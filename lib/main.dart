@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:perixx_outbound/Application/auth_service.dart';
-import 'package:perixx_outbound/Presentation/login_view.dart';
-import 'package:perixx_outbound/Presentation/order_list_view.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:perixx_outbound/Application/login/auth_service.dart';
+import 'package:perixx_outbound/Presentation/login/login_view.dart';
+import 'package:perixx_outbound/Presentation/orderlist/order_list_view.dart';
 import 'package:perixx_outbound/constants/routes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
+  await dotenv.load();
+  runApp(GetMaterialApp(
       routes: {
         loginRoute: (context) => const LoginView(),
         orderListRoute: (context) => const OrderListView(),
       },
       title: 'Perixx Outbound',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      //internalization
+      // localizationsDelegates: const [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      //   GlobalCupertinoLocalizations.delegate,
+      // ],
+      // supportedLocales: const [
+      //   Locale('en', ''),
+      //   Locale('de', ''),
+      // ],
       home: const HomePage()));
 }
 

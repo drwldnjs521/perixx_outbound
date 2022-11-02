@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:perixx_outbound/Application/auth_service.dart';
+import 'package:get/get.dart';
+import 'package:perixx_outbound/Application/login/auth_service.dart';
 import 'package:perixx_outbound/Presentation/enums/menu_actions.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
@@ -59,10 +60,11 @@ class _OrderListViewState extends State<OrderListView> {
                   );
                   if (shouldLogout) {
                     await AuthService.firebase().logOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      loginRoute,
-                      (_) => false,
-                    );
+                    // Navigator.of(context).pushNamedAndRemoveUntil(
+                    //   loginRoute,
+                    //   (_) => false,
+                    // );
+                    Get.toNamed(loginRoute);
                   }
               }
             },

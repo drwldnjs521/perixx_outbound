@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:perixx_outbound/Application/auth_exceptions.dart';
-import 'package:perixx_outbound/Domain/auth_user.dart';
+import 'package:perixx_outbound/Data/login/auth_exceptions.dart';
+import 'package:perixx_outbound/Domain/login/auth_user.dart';
 import 'package:perixx_outbound/firebase_options.dart';
 
 class FirebaseAuthRepository {

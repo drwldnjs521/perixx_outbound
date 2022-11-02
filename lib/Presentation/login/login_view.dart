@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:perixx_outbound/Application/auth_exceptions.dart';
-import 'package:perixx_outbound/Application/auth_service.dart';
+import 'package:get/get.dart';
+import 'package:perixx_outbound/Data/login/auth_exceptions.dart';
+import 'package:perixx_outbound/Application/login/auth_service.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/error_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
 
@@ -271,3 +272,231 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       body: SafeArea(
+//         child: Center(
+//           child: SingleChildScrollView(
+//             // child: GestureDetector(
+//             //   onTap: () {
+//             //     FocusScope.of(context).unfocus();
+//             //   },
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Row(
+//                   children: [
+//                     const SizedBox(
+//                       width: 5,
+//                     ),
+//                     Container(
+//                       height: 300,
+//                       decoration: const BoxDecoration(
+//                         image: DecorationImage(
+//                           image: AssetImage("assets/perixx.png"),
+//                         ), //DecorationImage
+//                       ), //BoxDecoration
+//                     ), //Con
+//                   ],
+//                 ),
+//                 //Positioned
+
+//                 Container(
+//                   padding: const EdgeInsets.all(20),
+//                   height: 220,
+//                   width: MediaQuery.of(context).size.width - 40,
+//                   margin: const EdgeInsets.symmetric(horizontal: 20),
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     // border: Border.all(
+//                     //     color: Colors.indigo.shade900,
+//                     //     width: 1.0,
+//                     //     style: BorderStyle.solid),
+//                     borderRadius: BorderRadius.circular(15),
+//                     boxShadow: [
+//                       BoxShadow(
+//                         color: Colors.black.withOpacity(0.3),
+//                         blurRadius: 15,
+//                         spreadRadius: 5,
+//                       ),
+//                     ],
+//                   ), //BoxDecoration
+//                   child: SingleChildScrollView(
+//                     padding: const EdgeInsets.only(bottom: 20),
+//                     child: Column(
+//                       children: [
+//                         Container(
+//                           margin: const EdgeInsets.only(top: 20),
+//                           child: Form(
+//                             key: _formkey,
+//                             child: Column(
+//                               children: [
+//                                 const SizedBox(height: 13),
+//                                 TextFormField(
+//                                   keyboardType: TextInputType.emailAddress,
+//                                   key: const ValueKey(1),
+//                                   validator: (value) {
+//                                     if (value!.isEmpty ||
+//                                         !value.contains("@perixx.com")) {
+//                                       return "Please enter a valid email address!";
+//                                     }
+//                                     return null;
+//                                   },
+//                                   onSaved: (value) {
+//                                     _email = value!;
+//                                   },
+//                                   onChanged: (value) {
+//                                     _email = value;
+//                                   },
+//                                   decoration: const InputDecoration(
+//                                     prefixIcon: Icon(
+//                                       Icons.email_outlined,
+//                                       color: Color(0xFFB6C7D1),
+//                                     ),
+//                                     enabledBorder: OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                         color: Color(0XFFA7BCC7),
+//                                       ),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(35)),
+//                                     ),
+//                                     hintText: "Email",
+//                                     hintStyle: TextStyle(
+//                                         fontSize: 14, color: Color(0XFFA7BCC7)),
+//                                     contentPadding: EdgeInsets.all(10),
+//                                     focusedBorder: OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                         color: Color(0XFFA7BCC7),
+//                                       ),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(35)),
+//                                     ),
+//                                   ),
+//                                 ),
+//                                 const SizedBox(height: 15),
+//                                 TextFormField(
+//                                   obscureText: _isObscure,
+//                                   key: const ValueKey(2),
+//                                   validator: (value) {
+//                                     if (value!.isEmpty || value.length < 6) {
+//                                       return "Password must be at least 7 characters long!";
+//                                     }
+//                                     return null;
+//                                   },
+//                                   onSaved: (value) {
+//                                     _password = value!;
+//                                   },
+//                                   onChanged: (value) {
+//                                     _password = value;
+//                                   },
+//                                   decoration: InputDecoration(
+//                                     prefixIcon: const Icon(
+//                                       Icons.lock,
+//                                       color: Color(0xFFB6C7D1),
+//                                     ),
+//                                     suffixIcon: IconButton(
+//                                       icon: Icon(_isObscure
+//                                           ? Icons.visibility
+//                                           : Icons.visibility_off),
+//                                       onPressed: () {
+//                                         setState(() {
+//                                           _isObscure = !_isObscure;
+//                                         });
+//                                       },
+//                                     ),
+//                                     enabledBorder: const OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                         color: Color(0XFFA7BCC7),
+//                                       ),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(35)),
+//                                     ),
+//                                     hintText: "Password",
+//                                     hintStyle: const TextStyle(
+//                                         fontSize: 14, color: Color(0XFFA7BCC7)),
+//                                     contentPadding: const EdgeInsets.all(10),
+//                                     focusedBorder: const OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                         color: Color(0XFFA7BCC7),
+//                                       ),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(35)),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+
+//                 GestureDetector(
+//                       onTap: () async {
+//                         if (_tryValidation()) {
+//                           try {
+//                             await AuthService.firebase().logIn(
+//                               email: _email,
+//                               password: _password,
+//                             );
+//                             // Navigator.of(context).pushNamedAndRemoveUntil(
+//                             //   orderListRoute,
+//                             //   (route) => false,
+//                             // );
+//                             Get.toNamed(orderListRoute);
+//                           } on UserNotFoundAuthException catch (e) {
+//                             await showErrorDialog(
+//                               context,
+//                               "ERROR: ${e.toString().toUpperCase()}",
+//                             );
+//                           } on WrongPasswordAuthException catch (e) {
+//                             await showErrorDialog(
+//                               context,
+//                               "ERROR: ${e.toString().toUpperCase()}",
+//                             );
+//                           } on GenericAuthException catch (e) {
+//                             await showErrorDialog(
+//                               context,
+//                               "ERROR: ${e.toString().toUpperCase()}",
+//                             );
+//                           }
+//                         }
+//                       },
+//                       child: Container(
+//                     child: Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 25.0),
+//                       child: Container(
+//                         padding: EdgeInsets.all(20),
+//                         decoration: BoxDecoration(
+//                             color: Colors.red,
+//                             borderRadius: BorderRadius.circular(12)),
+//                         child: Center(
+//                           child: Text(
+//                             'Sign in',
+//                             style: TextStyle(
+//                                 color: Colors.white,
+//                                 fontSize: 16,
+//                                 fontWeight: FontWeight.bold),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
