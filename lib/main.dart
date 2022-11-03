@@ -4,7 +4,6 @@ import 'package:perixx_outbound/Application/login/auth_service.dart';
 import 'package:perixx_outbound/Presentation/login/login_view.dart';
 import 'package:perixx_outbound/Presentation/orderlist/order_list_view.dart';
 import 'package:perixx_outbound/constants/routes.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
