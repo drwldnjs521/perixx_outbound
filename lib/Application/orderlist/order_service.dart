@@ -10,9 +10,9 @@ class OrderService implements OrderRepository {
   factory OrderService.mysql() =>
       OrderService(OrderRepository(Mysql.getConnection()));
 
-  static Future<void> createConn() async {
-    await Mysql.getConnection();
-  }
+  // static Future<void> createConn() async {
+  //   await Mysql.getConnection();
+  // }
 
   @override
   Future<List<Order>> getOrderOn(String timeOn) async {

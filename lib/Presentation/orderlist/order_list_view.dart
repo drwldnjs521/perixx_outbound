@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mysql1/mysql1.dart';
+import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Application/login/auth_service.dart';
-import 'package:perixx_outbound/Application/orderlist/mysql.dart';
+import 'package:perixx_outbound/Application/orderlist/order_service.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
 
@@ -18,11 +18,14 @@ class OrderListView extends StatefulWidget {
 
 class _OrderListViewState extends State<OrderListView> {
   String get userName => AuthService.firebase().currentUser!.userName!;
-  MySqlConnection mySqlConnection = await Mysql.getConnection();
+  OrderService orderService = OrderService.mysql();
+  TextEditingController dateInput = TextEditingController();
+
+  // MySqlConnection mySqlConnection = await Mysql.getConnection();
 
   @override
   Widget build(BuildContext context) {
-    const conn = Mysql.getConnection;
+    // const conn = Mysql.getConnection;
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -135,33 +138,119 @@ class _OrderListViewState extends State<OrderListView> {
               ),
             ),
           ),
-          // Consumer(
-          //   builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          //     return SliverList(
-          //       delegate: SliverChildBuilderDelegate(
-          //           // (context, index) => ListTile(
-          //           //   tileColor:
-          //           //       (index % 2 == 0) ? Colors.white : Colors.green[50],
-          //           //   title: Center(
-          //           //     child: Text('$index',
-          //           //         style: TextStyle(
-          //           //             fontWeight: FontWeight.normal,
-          //           //             fontSize: 50,
-          //           //             color: Colors.greenAccent[400]) //TextStyle
-          //           //         ), //Text
-          //           //   ), //Center
-          //           // ), //ListTile
-          //           (context, index) => ListView.builder(
-          //                 itemCount: orderService.getAllArticle().length,
-          //                 itemBuilder: (BuildContext context, int index) {},
-          //               )
-          //           // childCount: 51,
-          //           ), //SliverChildBuildDelegate
-          //     );
-          //   },
-          // ) //SliverList
+          //   SliverToBoxAdapter(
+          //     child: Container(
+          //       alignment: Alignment.center,
+          //       height: 100,
+          //       child: TextField(
+          //         controller: dateInput,
+
+          //         decoration: const InputDecoration(
+          //             icon: Icon(Icons.calendar_today), //icon of text field
+          //             labelText: "Date of orders" //label text of field
+          //             ),
+          //         readOnly: true,
+          //         //set it true, so that user will not able to edit text
+          //         onTap: () => _selectDate(context),
+          //       ),
+          //     ),
+          //   ),
+          //   SliverGrid(
+          //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          //       maxCrossAxisExtent: 200.0,
+          //       mainAxisSpacing: 10.0,
+          //       crossAxisSpacing: 10.0,
+          //       childAspectRatio: 4.0,
+          //     ),
+          //     delegate: SliverChildBuilderDelegate(
+          //       (BuildContext context, int index) {
+          //         return Container(
+          //           alignment: Alignment.center,
+          //           color: Colors.teal[100 * (index % 9)],
+          //           child: Text('Grid Item $index'),
+          //         );
+          //       },
+          //       childCount: 20,
+          //     ),
+          //   ),
+          //   SliverToBoxAdapter(
+          //     child: Container(
+          //       color: Colors.amberAccent,
+          //       alignment: Alignment.center,
+          //       height: 200,
+          //       child: const Text('This is Container'),
+          //     ),
+          //   ),
+          //   SliverToBoxAdapter(
+          //     child: SizedBox(
+          //       height: 100.0,
+          //       child: ListView.builder(
+          //         scrollDirection: Axis.horizontal,
+          //         itemCount: 10,
+          //         itemBuilder: (context, index) {
+          //           return SizedBox(
+          //             width: 100.0,
+          //             child: Card(
+          //               color: Colors.cyan[100 * (index % 9)],
+          //               child: Text('Item $index'),
+          //             ),
+          //           );
+          //         },
+          //       ),
+          //     ),
+          //   ),
+
+          //   SliverList(
+          //     delegate: SliverChildBuilderDelegate(
+          //       (context, index) => ListTile(
+          //         tileColor: (index % 2 == 0) ? Colors.white : Colors.green[50],
+          //         title: Center(
+          //           child: Text('$index',
+          //               style: TextStyle(
+          //                   fontWeight: FontWeight.normal,
+          //                   fontSize: 50,
+          //                   color: Colors.greenAccent[400]) //TextStyle
+          //               ), //Text
+          //         ), //Center
+          //       ), //ListTile
+
+          //       childCount: 51,
+          //     ), //SliverChildBuildDelegate
+          //   ),
         ],
       ),
     );
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2025),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.amberAccent, // <-- SEE HERE
+              onPrimary: Colors.redAccent, // <-- SEE HERE
+              onSurface: Colors.blueAccent, // <-- SEE HERE
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        dateInput.text = formattedDate; //set output date to TextField value.
+      });
+    } else {}
   }
 }

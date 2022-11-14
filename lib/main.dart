@@ -21,7 +21,8 @@ Future<void> main() async {
     title: 'Perixx Outbound',
     debugShowCheckedModeBanner: false,
     translations: Languages(),
-    locale: Get.deviceLocale,
+    // locale: Get.deviceLocale,
+    locale: Get.locale,
     fallbackLocale: const Locale('en', 'US'),
     home: FutureBuilder(
       future: AuthService.firebase().initialize(),
