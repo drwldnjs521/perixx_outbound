@@ -24,7 +24,7 @@ Please visit the link to follow up the project : [Jeewon's Bachelor thesis](http
 - [ ] Continuous Integration (CI)
 - [x] Zur besseren Veranschaulichung ist es empfehlenswert, alle möglichen Anforderungen zu dokumentieren und wie sie umgesetzt werden können .
 (Pflicht- und Lastenheft)
-- [ ] Riverpod Architecture (Gedanken machen, ob die Architektur notwendig ist und warum sie für dieses Projekt besser geeignet ist als andere Architekturen) 
+- [ ] Riverpod Architecture (Gedanken machen, ob die Architektur notwendig ist und warum sie für dieses Projekt besser geeignet ist als andere Architekturen) <br/>
 __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf können die Besprechungen auch häufiger stattfinden.__
 
 <mark> Nächste Besprechung : am 14.11.2022 um 14:00 Uhr </mark>
