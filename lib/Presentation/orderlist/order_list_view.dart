@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Application/login/auth_service.dart';
 import 'package:perixx_outbound/Application/orderlist/order_service.dart';
+import 'package:perixx_outbound/Data/orderlist/order_repository.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
 import 'package:perixx_outbound/constants/routes.dart';
 
@@ -18,7 +19,7 @@ class OrderListView extends StatefulWidget {
 
 class _OrderListViewState extends State<OrderListView> {
   String get userName => AuthService.firebase().currentUser!.userName!;
-  OrderService orderService = OrderService.mysql();
+  OrderRepository orderService = OrderService.mysql();
   TextEditingController dateInput = TextEditingController();
 
   // MySqlConnection mySqlConnection = await Mysql.getConnection();

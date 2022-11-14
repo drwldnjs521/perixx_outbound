@@ -8,7 +8,7 @@ class OrderService implements OrderRepository {
   const OrderService(this._orderRepo);
 
   factory OrderService.mysql() =>
-      OrderService(OrderRepository(Mysql.getConnection()));
+      OrderService(OrderRepository());
 
   // static Future<void> createConn() async {
   //   await Mysql.getConnection();
