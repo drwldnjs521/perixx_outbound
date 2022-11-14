@@ -33,116 +33,155 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
-                child: Container(
-                  height: 300,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/perixx.png"),
-                    ), //DecorationImage
-                  ), //BoxDecoration
-                ), //Container
-              ), //Positioned
-              Positioned(
-                top: 260,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  height: 220,
-                  width: MediaQuery.of(context).size.width - 40,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    // border: Border.all(
-                    //     color: Colors.indigo.shade900,
-                    //     width: 1.0,
-                    //     style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 15,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ), //BoxDecoration
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: Form(
-                            key: _formkey,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 13),
-                                TextFormField(
+      body: SafeArea(
+        child: Center(
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 300,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/perixx.png"),
+                      ), //DecorationImage
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    height: 400,
+                    width: MediaQuery.of(context).size.width - 100,
+                    margin: const EdgeInsets.symmetric(horizontal: 40),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 182, 182, 183),
+                          width: 1.0,
+                          style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 15,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Form(
+                      key: _formkey,
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                border: Border.all(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 23, 0, 25),
+                                child: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   keyboardType: TextInputType.emailAddress,
                                   key: const ValueKey(1),
                                   validator: (value) {
-                                    if (value!.isEmpty ||
-                                        !value.contains("@perixx.com")) {
-                                      return "Please enter a valid email address!";
+                                    if (!value!.contains("@perixx.com")) {
+                                      return 'enter_valid_email'.tr;
                                     }
                                     return null;
                                   },
                                   onSaved: (value) {
-                                    _email = value!;
+                                    setState(() {
+                                      _email = value!;
+                                    });
                                   },
                                   onChanged: (value) {
-                                    _email = value;
+                                    setState(() {
+                                      _email = value;
+                                    });
                                   },
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(
+                                  style: const TextStyle(fontSize: 25),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
                                       Icons.email_outlined,
                                       color: Color(0xFFB6C7D1),
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0XFFA7BCC7),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(35)),
+                                    // enabledBorder: const OutlineInputBorder(
+                                    //   borderSide: BorderSide(
+                                    //     color: Color(0XFFA7BCC7),
+                                    //   ),
+                                    //   borderRadius: BorderRadius.all(
+                                    //     Radius.circular(35),
+                                    //   ),
+                                    // ),
+                                    border: InputBorder.none,
+                                    hintText: "email".tr,
+                                    hintStyle: const TextStyle(
+                                      fontSize: 25,
+                                      color: Color(0XFFA7BCC7),
                                     ),
-                                    hintText: "Email",
-                                    hintStyle: TextStyle(
-                                        fontSize: 14, color: Color(0XFFA7BCC7)),
-                                    contentPadding: EdgeInsets.all(10),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0XFFA7BCC7),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(35)),
-                                    ),
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(25, 5, 25, 0),
+                                    // focusedBorder: const OutlineInputBorder(
+                                    //   borderSide: BorderSide(
+                                    //     color: Color(0XFFA7BCC7),
+                                    //   ),
+                                    //   borderRadius:
+                                    //       BorderRadius.all(Radius.circular(35)),
+                                    // ),
                                   ),
                                 ),
-                                const SizedBox(height: 15),
-                                TextFormField(
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                border: Border.all(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 23, 0, 25),
+                                child: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   obscureText: _isObscure,
                                   key: const ValueKey(2),
                                   validator: (value) {
-                                    if (value!.isEmpty || value.length < 6) {
-                                      return "Password must be at least 7 characters long!";
+                                    if (value!.length < 6) {
+                                      return "not_valid_password".tr;
                                     }
                                     return null;
                                   },
                                   onSaved: (value) {
-                                    _password = value!;
+                                    setState(() {
+                                      _password = value!;
+                                    });
                                   },
                                   onChanged: (value) {
-                                    _password = value;
+                                    setState(() {
+                                      _password = value;
+                                    });
                                   },
+                                  style: const TextStyle(fontSize: 25),
                                   decoration: InputDecoration(
                                     prefixIcon: const Icon(
                                       Icons.lock,
@@ -158,345 +197,111 @@ class _LoginViewState extends State<LoginView> {
                                         });
                                       },
                                     ),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0XFFA7BCC7),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(35)),
-                                    ),
-                                    hintText: "Password",
+                                    // enabledBorder: const OutlineInputBorder(
+                                    //   borderSide: BorderSide(
+                                    //     color: Color(0XFFA7BCC7),
+                                    //   ),
+                                    //   borderRadius:
+                                    //       BorderRadius.all(Radius.circular(35)),
+                                    // ),
+                                    border: InputBorder.none,
+                                    hintText: "password".tr,
                                     hintStyle: const TextStyle(
-                                        fontSize: 14, color: Color(0XFFA7BCC7)),
-                                    contentPadding: const EdgeInsets.all(10),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0XFFA7BCC7),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(35)),
-                                    ),
+                                        fontSize: 25, color: Color(0XFFA7BCC7)),
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(25, 5, 25, 0),
+                                    // focusedBorder: const OutlineInputBorder(
+                                    //   borderSide: BorderSide(
+                                    //     color: Color(0XFFA7BCC7),
+                                    //   ),
+                                    //   borderRadius:
+                                    //       BorderRadius.all(Radius.circular(35)),
+                                    // ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 450,
-                right: 0,
-                left: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    height: 90,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 15,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (_tryValidation()) {
-                          try {
-                            await AuthService.firebase().logIn(
-                              email: _email,
-                              password: _password,
-                            );
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              orderListRoute,
-                              (route) => false,
-                            );
-                          } on UserNotFoundAuthException catch (e) {
-                            await showErrorDialog(
-                              context,
-                              "ERROR: ${e.toString().toUpperCase()}",
-                            );
-                          } on WrongPasswordAuthException catch (e) {
-                            await showErrorDialog(
-                              context,
-                              "ERROR: ${e.toString().toUpperCase()}",
-                            );
-                          } on GenericAuthException catch (e) {
-                            await showErrorDialog(
-                              context,
-                              "ERROR: ${e.toString().toUpperCase()}",
-                            );
-                          }
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      if (_tryValidation()) {
+                        try {
+                          await AuthService.firebase().logIn(
+                            email: _email,
+                            password: _password,
+                          );
+                          Get.toNamed(orderListRoute);
+                        } on UserNotFoundAuthException catch (e) {
+                          await showErrorDialog(
+                            context,
+                            "$e",
+                          );
+                        } on WrongPasswordAuthException catch (e) {
+                          await showErrorDialog(
+                            context,
+                            "$e",
+                          );
+                        } on GenericAuthException catch (e) {
+                          await showErrorDialog(
+                            context,
+                            "$e",
+                          );
                         }
-                      },
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
+                        height: 90,
+                        width: MediaQuery.of(context).size.width - 100,
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                              colors: [
-                                Colors.orange,
-                                Colors.red,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight),
-                          borderRadius: BorderRadius.circular(30),
+                            colors: [
+                              Colors.orange,
+                              Colors.red,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 182, 182, 183),
+                              width: 1.0,
+                              style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset: const Offset(0, 1),
+                              blurRadius: 15,
+                              spreadRadius: 5,
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
+                        child: const Center(
+                          child: Text(
+                            'Sign in',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: SafeArea(
-//         child: Center(
-//           child: SingleChildScrollView(
-//             // child: GestureDetector(
-//             //   onTap: () {
-//             //     FocusScope.of(context).unfocus();
-//             //   },
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Row(
-//                   children: [
-//                     const SizedBox(
-//                       width: 5,
-//                     ),
-//                     Container(
-//                       height: 300,
-//                       decoration: const BoxDecoration(
-//                         image: DecorationImage(
-//                           image: AssetImage("assets/perixx.png"),
-//                         ), //DecorationImage
-//                       ), //BoxDecoration
-//                     ), //Con
-//                   ],
-//                 ),
-//                 //Positioned
-
-//                 Container(
-//                   padding: const EdgeInsets.all(20),
-//                   height: 220,
-//                   width: MediaQuery.of(context).size.width - 40,
-//                   margin: const EdgeInsets.symmetric(horizontal: 20),
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     // border: Border.all(
-//                     //     color: Colors.indigo.shade900,
-//                     //     width: 1.0,
-//                     //     style: BorderStyle.solid),
-//                     borderRadius: BorderRadius.circular(15),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.black.withOpacity(0.3),
-//                         blurRadius: 15,
-//                         spreadRadius: 5,
-//                       ),
-//                     ],
-//                   ), //BoxDecoration
-//                   child: SingleChildScrollView(
-//                     padding: const EdgeInsets.only(bottom: 20),
-//                     child: Column(
-//                       children: [
-//                         Container(
-//                           margin: const EdgeInsets.only(top: 20),
-//                           child: Form(
-//                             key: _formkey,
-//                             child: Column(
-//                               children: [
-//                                 const SizedBox(height: 13),
-//                                 TextFormField(
-//                                   keyboardType: TextInputType.emailAddress,
-//                                   key: const ValueKey(1),
-//                                   validator: (value) {
-//                                     if (value!.isEmpty ||
-//                                         !value.contains("@perixx.com")) {
-//                                       return "Please enter a valid email address!";
-//                                     }
-//                                     return null;
-//                                   },
-//                                   onSaved: (value) {
-//                                     _email = value!;
-//                                   },
-//                                   onChanged: (value) {
-//                                     _email = value;
-//                                   },
-//                                   decoration: const InputDecoration(
-//                                     prefixIcon: Icon(
-//                                       Icons.email_outlined,
-//                                       color: Color(0xFFB6C7D1),
-//                                     ),
-//                                     enabledBorder: OutlineInputBorder(
-//                                       borderSide: BorderSide(
-//                                         color: Color(0XFFA7BCC7),
-//                                       ),
-//                                       borderRadius:
-//                                           BorderRadius.all(Radius.circular(35)),
-//                                     ),
-//                                     hintText: "Email",
-//                                     hintStyle: TextStyle(
-//                                         fontSize: 14, color: Color(0XFFA7BCC7)),
-//                                     contentPadding: EdgeInsets.all(10),
-//                                     focusedBorder: OutlineInputBorder(
-//                                       borderSide: BorderSide(
-//                                         color: Color(0XFFA7BCC7),
-//                                       ),
-//                                       borderRadius:
-//                                           BorderRadius.all(Radius.circular(35)),
-//                                     ),
-//                                   ),
-//                                 ),
-//                                 const SizedBox(height: 15),
-//                                 TextFormField(
-//                                   obscureText: _isObscure,
-//                                   key: const ValueKey(2),
-//                                   validator: (value) {
-//                                     if (value!.isEmpty || value.length < 6) {
-//                                       return "Password must be at least 7 characters long!";
-//                                     }
-//                                     return null;
-//                                   },
-//                                   onSaved: (value) {
-//                                     _password = value!;
-//                                   },
-//                                   onChanged: (value) {
-//                                     _password = value;
-//                                   },
-//                                   decoration: InputDecoration(
-//                                     prefixIcon: const Icon(
-//                                       Icons.lock,
-//                                       color: Color(0xFFB6C7D1),
-//                                     ),
-//                                     suffixIcon: IconButton(
-//                                       icon: Icon(_isObscure
-//                                           ? Icons.visibility
-//                                           : Icons.visibility_off),
-//                                       onPressed: () {
-//                                         setState(() {
-//                                           _isObscure = !_isObscure;
-//                                         });
-//                                       },
-//                                     ),
-//                                     enabledBorder: const OutlineInputBorder(
-//                                       borderSide: BorderSide(
-//                                         color: Color(0XFFA7BCC7),
-//                                       ),
-//                                       borderRadius:
-//                                           BorderRadius.all(Radius.circular(35)),
-//                                     ),
-//                                     hintText: "Password",
-//                                     hintStyle: const TextStyle(
-//                                         fontSize: 14, color: Color(0XFFA7BCC7)),
-//                                     contentPadding: const EdgeInsets.all(10),
-//                                     focusedBorder: const OutlineInputBorder(
-//                                       borderSide: BorderSide(
-//                                         color: Color(0XFFA7BCC7),
-//                                       ),
-//                                       borderRadius:
-//                                           BorderRadius.all(Radius.circular(35)),
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 GestureDetector(
-//                       onTap: () async {
-//                         if (_tryValidation()) {
-//                           try {
-//                             await AuthService.firebase().logIn(
-//                               email: _email,
-//                               password: _password,
-//                             );
-//                             // Navigator.of(context).pushNamedAndRemoveUntil(
-//                             //   orderListRoute,
-//                             //   (route) => false,
-//                             // );
-//                             Get.toNamed(orderListRoute);
-//                           } on UserNotFoundAuthException catch (e) {
-//                             await showErrorDialog(
-//                               context,
-//                               "ERROR: ${e.toString().toUpperCase()}",
-//                             );
-//                           } on WrongPasswordAuthException catch (e) {
-//                             await showErrorDialog(
-//                               context,
-//                               "ERROR: ${e.toString().toUpperCase()}",
-//                             );
-//                           } on GenericAuthException catch (e) {
-//                             await showErrorDialog(
-//                               context,
-//                               "ERROR: ${e.toString().toUpperCase()}",
-//                             );
-//                           }
-//                         }
-//                       },
-//                       child: Container(
-//                     child: Padding(
-//                       padding: EdgeInsets.symmetric(horizontal: 25.0),
-//                       child: Container(
-//                         padding: EdgeInsets.all(20),
-//                         decoration: BoxDecoration(
-//                             color: Colors.red,
-//                             borderRadius: BorderRadius.circular(12)),
-//                         child: Center(
-//                           child: Text(
-//                             'Sign in',
-//                             style: TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: 16,
-//                                 fontWeight: FontWeight.bold),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

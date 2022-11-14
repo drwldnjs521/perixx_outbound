@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/generic_dialog.dart';
 
 Future<void> showErrorDialog(
@@ -7,10 +8,10 @@ Future<void> showErrorDialog(
 ) {
   return showGenericDialog<void>(
     context: context,
-    title: 'An error occured!',
+    title: 'error'.tr,
     content: text,
     optionsBuilder: () => {
-      'OK': null,
+      // 'OK': null,
     },
   );
 }

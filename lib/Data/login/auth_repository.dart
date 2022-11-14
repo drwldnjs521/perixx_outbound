@@ -8,7 +8,9 @@ class FirebaseAuthRepository {
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _updateUserName(user);
+      if (user.displayName == null) {
+        _updateUserName(user);
+      }
       return AuthUser.fromFirebase(user);
     } else {
       return null;
@@ -25,11 +27,7 @@ class FirebaseAuthRepository {
         password: password,
       );
       final user = currentUser;
-      if (user != null) {
-        return user;
-      } else {
-        throw UserNotLoggedInAuthExeption();
-      }
+      return user!;
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
         throw UserNotFoundAuthException();
@@ -44,23 +42,12 @@ class FirebaseAuthRepository {
   }
 
   Future<void> logOut() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      FirebaseAuth.instance.signOut();
-      return;
-    } else {
-      throw UserNotLoggedInAuthExeption();
-    }
+    FirebaseAuth.instance.signOut();
   }
 
   Future<void> _updateUserName(User user) async {
     final userName = user.email!.split("@")[0];
-    if (user.displayName == null) {
-      await user.updateDisplayName(userName);
-      return;
-    } else {
-      throw UserHasAlreadyAUserNameException();
-    }
+    await user.updateDisplayName(userName);
   }
 
   Future<void> initialize() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/generic_dialog.dart';
+import 'package:get/get.dart';
 
 Future<bool> showLogOutDialog(
   BuildContext context,
@@ -7,12 +8,12 @@ Future<bool> showLogOutDialog(
 ) {
   return showGenericDialogWithUserName(
     context: context,
-    title: 'LOGOUT',
+    title: 'Logout',
     userName: userName,
-    content: 'ARE YOU SURE YOU WANT TO LOG OUT?',
+    content: 'check_logout'.tr,
     optionsBuilder: () => {
-      'CANCEL': false,
-      'LOGOUT': true,
+      'Cancel': false,
+      'Logout': true,
     },
   ).then(
     (value) => value ?? false,
