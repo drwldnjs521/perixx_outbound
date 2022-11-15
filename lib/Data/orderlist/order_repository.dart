@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:mysql1/mysql1.dart';
+import 'package:perixx_outbound/Application/orderlist/mysql.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/constants/mysql_crud.dart';
 
@@ -20,11 +22,12 @@ class OrderRepository {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     var result = await _conn.query(orderToday, [formattedDate]);
-    return result
+    result
         .map(
           (row) => Order.fromRow(row.fields),
         )
         .forEach((e) => orderList.addOrder(e));
+    return orderList;
   }
 
   Future<List<Order>> getOrderOn(String timeOn) async {
@@ -32,11 +35,12 @@ class OrderRepository {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(DateTime.parse(timeOn));
     var result = await _conn.query(orderOn, [formattedDate]);
-    return result
+    result
         .map(
           (row) => Order.fromRow(row.fields),
         )
         .forEach((e) => orderList.addOrder(e));
+    return orderList;
   }
 
   Future<List<Order>> getOrderBetween(String begin, String end) async {
@@ -48,14 +52,19 @@ class OrderRepository {
       formattedBeginDate,
       formattedEndDate,
     ]);
-    return result
+    result
         .map(
           (row) => Order.fromRow(row.fields),
         )
         .forEach((e) => orderList.addOrder(e));
+    return orderList;
   }
 
   Future<void> close() async {
     await _conn.close();
+  }
+
+  Future<MySqlConnection> initialize() async {
+    return await Mysql.getConnection();
   }
 }

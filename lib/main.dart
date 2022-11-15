@@ -11,7 +11,6 @@ import 'package:perixx_outbound/Presentation/languages.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-
   runApp(GetMaterialApp(
     routes: {
       loginRoute: (context) => const LoginView(),

@@ -13,14 +13,16 @@ const createScannedByTable = '''CREATE TABLE IF NOT EXISTS scanned_by (
                 FOREIGN KEY (order_id) REFERENCES valid_order(reference_no)
               );''';
 
-const orderToday = '''SELECT * FROM (SELECT *
+const orderToday =
+    '''SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
 FROM valid_order
 LEFT JOIN (SELECT reference_no, assigner AS packed_by FROM packed_by) AS a USING(reference_no)
 LEFT JOIN (SELECT reference_no, assigner AS scanned_by FROM scanned_by) AS b USING(reference_no)
 WHERE valid_order.created_date = ?) AS order_table
 LEFT JOIN article ON article.id = order_table.article_id''';
 
-const orderOn = '''SELECT * FROM (SELECT *
+const orderOn =
+    '''SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
 FROM valid_order
 LEFT JOIN (SELECT reference_no, assigner AS packed_by FROM packed_by) AS a USING(reference_no)
 LEFT JOIN (SELECT reference_no, assigner AS scanned_by FROM scanned_by) AS b USING(reference_no)
@@ -28,7 +30,7 @@ WHERE valid_order.created_date = ?) AS order_table
 LEFT JOIN article ON article.id = order_table.article_id''';
 
 const orderBetween = '''
-SELECT * FROM (SELECT *
+SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
 FROM valid_order
 LEFT JOIN (SELECT reference_no, assigner AS packed_by FROM packed_by) AS a USING(reference_no)
 LEFT JOIN (SELECT reference_no, assigner AS scanned_by FROM scanned_by) AS b USING(reference_no)

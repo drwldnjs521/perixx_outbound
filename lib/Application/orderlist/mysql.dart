@@ -6,9 +6,8 @@ class Mysql {
     return await MySqlConnection.connect(
       ConnectionSettings(
         host: dotenv.env['DB_HOST']!,
-        port: int.parse(dotenv.env['DB_PORT']!),
         user: dotenv.env['DB_USER']!,
-        db: dotenv.env['DB_Database'],
+        db: dotenv.env['DB_DATABASE']!,
         password: dotenv.env['DB_PASSWORD']!,
       ),
     );
