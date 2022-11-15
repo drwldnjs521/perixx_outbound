@@ -1,4 +1,3 @@
-import 'package:mysql1/mysql1.dart';
 import 'package:perixx_outbound/Data/orderlist/order_repository.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
 
@@ -7,8 +6,7 @@ class OrderService {
 
   const OrderService(this._orderRepo);
 
-  factory OrderService.mysql(MySqlConnection conn) =>
-      OrderService(OrderRepository(conn));
+  factory OrderService.mysql() => OrderService(OrderRepository());
 
   // static Future<void> createConn() async {
   //   await Mysql.getConnection();
@@ -32,9 +30,5 @@ class OrderService {
 
   Future<void> open() async {
     await _orderRepo.open();
-  }
-
-  Future<void> initialize() async {
-    await _orderRepo.initialize();
   }
 }

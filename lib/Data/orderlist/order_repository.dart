@@ -5,9 +5,9 @@ import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/constants/mysql_crud.dart';
 
 class OrderRepository {
-  final _conn;
+  final MySqlConnection _conn = Mysql.connection;
 
-  const OrderRepository(this._conn);
+  OrderRepository();
 
   Future<void> open() async {
     // create shippedBy table
@@ -62,9 +62,5 @@ class OrderRepository {
 
   Future<void> close() async {
     await _conn.close();
-  }
-
-  Future<MySqlConnection> initialize() async {
-    return await Mysql.getConnection();
   }
 }

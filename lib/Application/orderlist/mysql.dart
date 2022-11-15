@@ -2,13 +2,42 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mysql1/mysql1.dart';
 
 class Mysql {
-  static Future<MySqlConnection> getConnection() async {
-    return await MySqlConnection.connect(
+  // Singleton pattern
+  static final Mysql _mySql = Mysql._internal();
+
+  factory Mysql() {
+    return _mySql;
+  }
+
+  Mysql._internal();
+
+  static Mysql get instance => _mySql;
+
+  static late MySqlConnection _connection;
+
+  static MySqlConnection get connection => _connection;
+
+  Future<void> createConnection() async {
+    final dbPort = dotenv.env['DB_PORT'];
+    final dbHost = dotenv.env['DB_HOST'];
+    final dbUser = dotenv.env['DB_USER'];
+    final db = dotenv.env['DB_DATABASE'];
+    final pw = dotenv.env['DB_PASSWORD'];
+    if (dbPort == null ||
+        dbHost == null ||
+        dbUser == null ||
+        db == null ||
+        pw == null) {
+      throw ArgumentError(
+          "Missing configuration value for database (see .env file).");
+    }
+    _connection = await MySqlConnection.connect(
       ConnectionSettings(
-        host: dotenv.env['DB_HOST']!,
-        user: dotenv.env['DB_USER']!,
-        db: dotenv.env['DB_DATABASE']!,
-        password: dotenv.env['DB_PASSWORD']!,
+        host: dbHost,
+        port: int.parse(dbPort),
+        user: dbUser,
+        db: db,
+        password: pw,
       ),
     );
   }
