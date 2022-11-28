@@ -18,23 +18,17 @@ class Mysql {
   static MySqlConnection get connection => _connection;
 
   Future<void> createConnection() async {
-    final dbPort = dotenv.env['DB_PORT'];
     final dbHost = dotenv.env['DB_HOST'];
     final dbUser = dotenv.env['DB_USER'];
     final db = dotenv.env['DB_DATABASE'];
     final pw = dotenv.env['DB_PASSWORD'];
-    if (dbPort == null ||
-        dbHost == null ||
-        dbUser == null ||
-        db == null ||
-        pw == null) {
+    if (dbHost == null || dbUser == null || db == null || pw == null) {
       throw ArgumentError(
           "Missing configuration value for database (see .env file).");
     }
     _connection = await MySqlConnection.connect(
       ConnectionSettings(
         host: dbHost,
-        port: int.parse(dbPort),
         user: dbUser,
         db: db,
         password: pw,

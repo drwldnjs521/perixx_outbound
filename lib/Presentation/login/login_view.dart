@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:perixx_outbound/Data/login/auth_exceptions.dart';
 import 'package:perixx_outbound/Application/login/auth_service.dart';
+import 'package:perixx_outbound/Presentation/size_config.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/error_dialog.dart';
-import 'package:perixx_outbound/constants/routes.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -31,31 +31,46 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig.init(context);
+    //screenwidth = 800
+    //screenwidth = 1232
+    // double screenWidth = MediaQuery.of(context).size.width;
+    // double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 300,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Container(
+                    height: SizeConfig.safeVertical * 0.2,
+                    width: SizeConfig.safeHorizontal * 0.8,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("assets/perixx.png"),
+                        fit: BoxFit.fill,
                       ), //DecorationImage
                     ),
                   ),
-                  Container(
+                ),
+                SizedBox(
+                  height: SizeConfig.safeVertical * 0.02,
+                ),
+                Center(
+                  child: Container(
                     padding: const EdgeInsets.all(20),
-                    height: 400,
-                    width: MediaQuery.of(context).size.width - 100,
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
+                    height: SizeConfig.safeVertical * 0.25,
+                    width: SizeConfig.screenWidth * 0.82,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -75,8 +90,8 @@ class _LoginViewState extends State<LoginView> {
                       key: _formkey,
                       child: Column(
                         children: <Widget>[
-                          const SizedBox(
-                            height: 40,
+                          SizedBox(
+                            height: SizeConfig.safeVertical * 0.025,
                           ),
                           Padding(
                             padding:
@@ -91,8 +106,7 @@ class _LoginViewState extends State<LoginView> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 23, 0, 25),
                                 child: TextFormField(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+                                  autovalidateMode: AutovalidateMode.disabled,
                                   keyboardType: TextInputType.emailAddress,
                                   key: const ValueKey(1),
                                   validator: (value) {
@@ -111,11 +125,15 @@ class _LoginViewState extends State<LoginView> {
                                       _email = value;
                                     });
                                   },
-                                  style: const TextStyle(fontSize: 25),
+                                  style: const TextStyle(fontSize: 35),
                                   decoration: InputDecoration(
+                                    errorStyle: const TextStyle(
+                                      fontSize: 20,
+                                    ),
                                     prefixIcon: const Icon(
                                       Icons.email_outlined,
                                       color: Color(0xFFB6C7D1),
+                                      size: 35,
                                     ),
                                     // enabledBorder: const OutlineInputBorder(
                                     //   borderSide: BorderSide(
@@ -128,11 +146,11 @@ class _LoginViewState extends State<LoginView> {
                                     border: InputBorder.none,
                                     hintText: "email".tr,
                                     hintStyle: const TextStyle(
-                                      fontSize: 25,
+                                      fontSize: 35,
                                       color: Color(0XFFA7BCC7),
                                     ),
                                     contentPadding:
-                                        const EdgeInsets.fromLTRB(25, 5, 25, 0),
+                                        const EdgeInsets.fromLTRB(25, 5, 25, 5),
                                     // focusedBorder: const OutlineInputBorder(
                                     //   borderSide: BorderSide(
                                     //     color: Color(0XFFA7BCC7),
@@ -145,8 +163,8 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 40,
+                          SizedBox(
+                            height: SizeConfig.safeVertical * 0.03,
                           ),
                           Padding(
                             padding:
@@ -159,10 +177,9 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(20, 23, 0, 25),
+                                    const EdgeInsets.fromLTRB(20, 23, 20, 25),
                                 child: TextFormField(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+                                  autovalidateMode: AutovalidateMode.disabled,
                                   obscureText: _isObscure,
                                   key: const ValueKey(2),
                                   validator: (value) {
@@ -181,42 +198,35 @@ class _LoginViewState extends State<LoginView> {
                                       _password = value;
                                     });
                                   },
-                                  style: const TextStyle(fontSize: 25),
+                                  style: const TextStyle(fontSize: 35),
                                   decoration: InputDecoration(
+                                    errorStyle: const TextStyle(
+                                      fontSize: 20,
+                                    ),
                                     prefixIcon: const Icon(
                                       Icons.lock,
                                       color: Color(0xFFB6C7D1),
+                                      size: 35,
                                     ),
                                     suffixIcon: IconButton(
-                                      icon: Icon(_isObscure
-                                          ? Icons.visibility
-                                          : Icons.visibility_off),
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      iconSize: 35,
                                       onPressed: () {
                                         setState(() {
                                           _isObscure = !_isObscure;
                                         });
                                       },
                                     ),
-                                    // enabledBorder: const OutlineInputBorder(
-                                    //   borderSide: BorderSide(
-                                    //     color: Color(0XFFA7BCC7),
-                                    //   ),
-                                    //   borderRadius:
-                                    //       BorderRadius.all(Radius.circular(35)),
-                                    // ),
                                     border: InputBorder.none,
                                     hintText: "password".tr,
                                     hintStyle: const TextStyle(
-                                        fontSize: 25, color: Color(0XFFA7BCC7)),
+                                        fontSize: 35, color: Color(0XFFA7BCC7)),
                                     contentPadding:
-                                        const EdgeInsets.fromLTRB(25, 5, 25, 0),
-                                    // focusedBorder: const OutlineInputBorder(
-                                    //   borderSide: BorderSide(
-                                    //     color: Color(0XFFA7BCC7),
-                                    //   ),
-                                    //   borderRadius:
-                                    //       BorderRadius.all(Radius.circular(35)),
-                                    // ),
+                                        const EdgeInsets.fromLTRB(25, 5, 25, 5),
                                   ),
                                 ),
                               ),
@@ -226,41 +236,45 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      if (_tryValidation()) {
-                        try {
-                          await AuthService.firebase().logIn(
-                            email: _email,
-                            password: _password,
-                          );
-                          Get.toNamed(orderListRoute);
-                        } on UserNotFoundAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "$e",
-                          );
-                        } on WrongPasswordAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "$e",
-                          );
-                        } on GenericAuthException catch (e) {
-                          await showErrorDialog(
-                            context,
-                            "$e",
-                          );
-                        }
+                ),
+                SizedBox(
+                  height: SizeConfig.safeVertical * 0.022,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    if (_tryValidation()) {
+                      try {
+                        await AuthService.firebase().logIn(
+                          email: _email,
+                          password: _password,
+                        );
+                        Get.toNamed('/ORDERLIST');
+                      } on UserNotFoundAuthException catch (e) {
+                        await showErrorDialog(
+                          context,
+                          "$e",
+                        );
+                      } on WrongPasswordAuthException catch (e) {
+                        await showErrorDialog(
+                          context,
+                          "$e",
+                        );
+                      } on GenericAuthException catch (e) {
+                        await showErrorDialog(
+                          context,
+                          "$e",
+                        );
                       }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25.0,
+                    ),
+                    child: Center(
                       child: Container(
-                        height: 90,
-                        width: MediaQuery.of(context).size.width - 100,
+                        height: SizeConfig.screenHeight * 0.066,
+                        width: SizeConfig.screenWidth * 0.82,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
@@ -289,15 +303,15 @@ class _LoginViewState extends State<LoginView> {
                             'Sign in',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 35,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

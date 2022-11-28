@@ -12,16 +12,24 @@ class OrderService {
   //   await Mysql.getConnection();
   // }
 
-  Future<List<Order>> getOrderOn(String timeOn) async {
-    return _orderRepo.getOrderOn(timeOn);
+  // Future<List<Order>> getOrderOn(String dateOn) async {
+  //   return _orderRepo.getOrderOn(dateOn);
+  // }
+
+  Future<List<Order>> getOrderBetweenWithStatus({
+    required String begin,
+    required String end,
+    required String? status,
+  }) async {
+    return _orderRepo.getOrderBetweenByStatus(
+      begin: begin,
+      end: end,
+      status: status,
+    );
   }
 
-  Future<List<Order>> getOrderBetween(String begin, String end) async {
-    return _orderRepo.getOrderBetween(begin, end);
-  }
-
-  Future<List<Order>> getOrderToday() async {
-    return _orderRepo.getOrderToday();
+  Future<List<Order>> getOrderByEan({required List<String> eans}) async {
+    return _orderRepo.getOrderByEan(eans: eans);
   }
 
   Future<void> close() async {
@@ -30,5 +38,9 @@ class OrderService {
 
   Future<void> open() async {
     await _orderRepo.open();
+  }
+
+  Future<void> initialize() async {
+    _orderRepo.initialize();
   }
 }

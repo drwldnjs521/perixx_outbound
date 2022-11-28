@@ -12,7 +12,7 @@ class Item {
   });
 
   @override
-  String toString() => 'Item, Article = ${article.articleNo}, Qty. = $qty';
+  String toString() => '${article.articleNo}   ${article.model}   x  $qty';
 
   @override
   bool operator ==(covariant Item other) =>

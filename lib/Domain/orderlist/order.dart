@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Domain/orderlist/article.dart';
 import 'package:perixx_outbound/Domain/orderlist/item.dart';
 import 'package:perixx_outbound/constants/mysql_crud.dart';
@@ -6,23 +7,25 @@ import 'package:perixx_outbound/constants/mysql_crud.dart';
 enum Status {
   processing,
   scanned,
-  packed,
+  shipped,
 }
 
 @immutable
 class Order {
+  final DateTime createdDate;
   final String orderNo;
   final Status status;
-  // final int articleId;
-  // final int qty;
   final List<Item> items;
   final String labelNo;
   final String shippedTo;
   final String cn23;
   final String? scannedBy;
-  final String? packedBy;
+  final String? shippedOn;
+
+  String get orderedDate => DateFormat('yyyy-MM-dd').format(createdDate);
 
   const Order({
+    required this.createdDate,
     required this.orderNo,
     // required this.articleId,
     // required this.qty,
@@ -32,18 +35,17 @@ class Order {
     required this.cn23,
     Status? status,
     String? scannedBy,
-    String? packedBy,
+    String? shippedOn,
   })  : scannedBy = scannedBy ?? '',
-        packedBy = packedBy ?? '',
-        status = scannedBy == null && packedBy == null
+        shippedOn = shippedOn ?? '',
+        status = scannedBy == null && shippedOn == null
             ? Status.processing
-            : (packedBy == null ? Status.scanned : Status.packed);
+            : (shippedOn == null ? Status.scanned : Status.shipped);
 
   Order.fromRow(Map<String, Object?> map)
-      : orderNo = map[orderNoColumn] as String,
+      : createdDate = map[createdDateColumn] as DateTime,
+        orderNo = map[orderNoColumn] as String,
         status = Status.values.byName(map[statusColumn].toString()),
-        // articleId = map[articleIdColumn] as int,
-        // qty = map[qtyColumn] as int,
         items = List.filled(
             1,
             Item(
@@ -59,11 +61,12 @@ class Order {
         labelNo = map[labelNoColumn] as String,
         shippedTo = map[shippedToColumn] as String,
         cn23 = map[cn23Column] as String,
-        scannedBy = map[scannedByColumn] as String?,
-        packedBy = map[packedByColumn] as String?;
+        scannedBy = map[scannedColumn] as String?,
+        shippedOn = map[shippedColumn] as String?;
 
   @override
-  String toString() => 'Order No. = $orderNo, Items = $items';
+  String toString() =>
+      'Order No. = $orderNo, Created Date = $createdDate, Items = $items';
 
   @override
   bool operator ==(covariant Order other) => orderNo == other.orderNo;

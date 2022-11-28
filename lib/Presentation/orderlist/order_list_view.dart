@@ -1,263 +1,354 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:perixx_outbound/Application/login/auth_service.dart';
-import 'package:perixx_outbound/Application/orderlist/order_service.dart';
-import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
-import 'package:perixx_outbound/constants/routes.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:perixx_outbound/Domain/orderlist/order.dart';
+import 'package:perixx_outbound/Presentation/size_config.dart';
 
-class OrderListView extends StatefulWidget {
+typedef OrderCallback = void Function(Order order);
+const ebay = 'assets/ebay.png';
+
+class OrderListView extends StatelessWidget {
+  final List<Order> orders;
+  final OrderCallback onTap;
+
   const OrderListView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<OrderListView> createState() => _OrderListViewState();
-}
-
-class _OrderListViewState extends State<OrderListView> {
-  String get userName => AuthService.firebase().currentUser!.userName!;
-  OrderService orderService = OrderService.mysql();
-  TextEditingController dateInput = TextEditingController();
-
-  // MySqlConnection mySqlConnection = await Mysql.getConnection();
+    super.key,
+    required this.orders,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // _getConn();
-    // OrderService orderService = OrderService.mysql(conn);
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            snap: true,
-            pinned: true,
-            floating: true,
-            toolbarHeight: 100,
-            leading: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-              child: IconButton(
-                icon: const Icon(Icons.menu),
-                iconSize: 50,
-                tooltip: 'Menu',
-                onPressed: () {},
-              ),
-            ), //IconButton
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 4, 5, 10),
-                child: IconButton(
-                  icon: const Icon(CupertinoIcons.barcode_viewfinder),
-                  iconSize: 45,
-                  tooltip: 'Scan',
-                  onPressed: () {
-                    Get.toNamed(scanRoute);
-                  },
-                ),
-              ), //IconButton
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 4, 10, 10),
-                child: IconButton(
-                  icon: const Icon(Icons.logout_rounded),
-                  iconSize: 45,
-                  tooltip: 'Logout',
-                  onPressed: () async {
-                    final shouldLogout = await showLogOutDialog(
-                      context,
-                      userName,
-                    );
-                    if (shouldLogout) {
-                      await AuthService.firebase().logOut();
-                      Get.offAllNamed(loginRoute);
-                    }
-                  },
-                ),
-              ), //IconButto
+    SizeConfig.init(context);
+    return ListView.builder(
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
+          switch (order.status.name) {
+            case 'scanned':
+              return _showOrder(context, Colors.indigo, index, order);
+            case 'shipped':
+              return _showOrder(context, Colors.yellow, index, order);
+            default:
+              return _showOrder(context,
+                  const Color.fromARGB(255, 255, 254, 254), index, order);
+          }
+        }
+        // final order = orders[index];
+        // return ListTile(
+        //   onTap: () {
+        //     onTap(order);
+        //   },
+        //   title: Text(
+        //     order.orderNo,
+        //     softWrap: true,
+        //     overflow: TextOverflow.ellipsis,
+        //   ),
+        // trailing: IconButton(
+        //   onPressed: () async {
+        //     final shouldDelete = await showDeleteDialog(context);
+        //     if (shouldDelete) {
+        //       onDeleteNote(note);
+        //     }
+        //   },
+        //   icon: const Icon(Icons.delete),
+        // ),
+        );
+  }
+
+  Widget _showOrder(
+      BuildContext context, Color cardColor, int index, Order order) {
+    return Card(
+      color: cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
+      ),
+      // shadowColor: Colors.black,
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+      elevation: 40,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Theme(
+          data: Theme.of(context)
+              .copyWith(dividerColor: Colors.transparent), //new,
+          child: ExpansionTile(
+            backgroundColor: Colors.white,
+            leading: CircleAvatar(
+              backgroundColor: Colors.blueGrey,
+              child: Text('${index + 1}'),
+            ),
+            title: _buildTitle(order),
+            trailing: const SizedBox(),
+            children: <Widget>[
+              _orderDetails(order),
             ],
-            iconTheme:
-                const IconThemeData(color: Color.fromARGB(255, 247, 247, 247)),
-
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/perixxappbar.jpg',
-                fit: BoxFit.fill,
-              ),
-            ),
-            //FlexibleSpaceBar
-            expandedHeight: 330,
-            collapsedHeight: 120,
-            backgroundColor: const Color.fromARGB(255, 195, 194, 194),
-            forceElevated: true,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(20),
-              child: Container(
-                width: double.maxFinite,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'In/Outbound',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromARGB(221, 89, 89, 89)),
-                  ),
-                ),
-              ),
-            ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => FutureBuilder(
-                future: orderService.getOrderOn('2022-11-02'),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            '${snapshot.error} occurred',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        );
-                      } else if (snapshot.hasData) {
-                        return const Text("HAS DATA");
-                      }
-                      return const Center(child: CircularProgressIndicator());
-                    default:
-                      return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            ),
-          ),
-          //   SliverToBoxAdapter(
-          //     child: Container(
-          //       alignment: Alignment.center,
-          //       height: 100,
-          //       child: TextField(
-          //         controller: dateInput,
-
-          //         decoration: const InputDecoration(
-          //             icon: Icon(Icons.calendar_today), //icon of text field
-          //             labelText: "Date of orders" //label text of field
-          //             ),
-          //         readOnly: true,
-          //         //set it true, so that user will not able to edit text
-          //         onTap: () => _selectDate(context),
-          //       ),
-          //     ),
-          //   ),
-          //   SliverGrid(
-          //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          //       maxCrossAxisExtent: 200.0,
-          //       mainAxisSpacing: 10.0,
-          //       crossAxisSpacing: 10.0,
-          //       childAspectRatio: 4.0,
-          //     ),
-          //     delegate: SliverChildBuilderDelegate(
-          //       (BuildContext context, int index) {
-          //         return Container(
-          //           alignment: Alignment.center,
-          //           color: Colors.teal[100 * (index % 9)],
-          //           child: Text('Grid Item $index'),
-          //         );
-          //       },
-          //       childCount: 20,
-          //     ),
-          //   ),
-          //   SliverToBoxAdapter(
-          //     child: Container(
-          //       color: Colors.amberAccent,
-          //       alignment: Alignment.center,
-          //       height: 200,
-          //       child: const Text('This is Container'),
-          //     ),
-          //   ),
-          //   SliverToBoxAdapter(
-          //     child: SizedBox(
-          //       height: 100.0,
-          //       child: ListView.builder(
-          //         scrollDirection: Axis.horizontal,
-          //         itemCount: 10,
-          //         itemBuilder: (context, index) {
-          //           return SizedBox(
-          //             width: 100.0,
-          //             child: Card(
-          //               color: Colors.cyan[100 * (index % 9)],
-          //               child: Text('Item $index'),
-          //             ),
-          //           );
-          //         },
-          //       ),
-          //     ),
-          //   ),
-
-          //   SliverList(
-          //     delegate: SliverChildBuilderDelegate(
-          //       (context, index) => ListTile(
-          //         tileColor: (index % 2 == 0) ? Colors.white : Colors.green[50],
-          //         title: Center(
-          //           child: Text('$index',
-          //               style: TextStyle(
-          //                   fontWeight: FontWeight.normal,
-          //                   fontSize: 50,
-          //                   color: Colors.greenAccent[400]) //TextStyle
-          //               ), //Text
-          //         ), //Center
-          //       ), //ListTile
-
-          //       childCount: 51,
-          //     ), //SliverChildBuildDelegate
-          //   ),
-        ],
+        ),
       ),
     );
   }
 
-  _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2010),
-      lastDate: DateTime(2025),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Colors.amberAccent, // <-- SEE HERE
-              onPrimary: Colors.redAccent, // <-- SEE HERE
-              onSurface: Colors.blueAccent, // <-- SEE HERE
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red, // button text color
+  Widget _buildTitle(Order order) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        ClipRect(
+          child: Image.asset(
+            ebay,
+            width: 200,
+            height: 200,
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text.rich(
+              TextSpan(
+                text: 'Order ID : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.orderNo,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          child: child!,
-        );
-      },
+            Text.rich(
+              TextSpan(
+                text: 'Shipped to : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.shippedTo,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                text: 'Ordered Date : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.orderedDate,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text.rich(
+              TextSpan(
+                text: 'Order Status : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.status.name,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                text: 'Scanned By : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.scannedBy,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                text: 'Shipped On : ',
+                style: GoogleFonts.notoSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: order.shippedOn,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        dateInput.text = formattedDate; //set output date to TextField value.
-      });
-    } else {}
   }
 
-  // void _getConn() {
-  //   setState(() async {
-  //     conn = await Mysql.getConnection();
-  //   });
-  // }
+  Widget _orderDetails(Order order) {
+    return SizedBox(
+      height: (200 * order.items.length).toDouble(),
+      child: ListView.builder(
+        itemCount: order.items.length,
+        itemBuilder: (context, index) {
+          final item = order.items[index];
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: ListTile(
+              // leading: SizedBox(
+              //   width: 500,
+              //   child: Image.network(
+              //     item.article.image,
+              //     scale: 3.0,
+              //   ),
+              // ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: ClipRect(
+                        child: Image.network(
+                      item.article.image,
+                      width: 150,
+                      height: 150,
+                    )),
+                  ),
+                  DataTable(
+                    headingRowHeight: 0,
+                    columns: const [
+                      DataColumn(
+                        label: Text(''),
+                      ),
+                      DataColumn(
+                        label: Text(''),
+                      ),
+                      DataColumn(
+                        label: Text(''),
+                      ),
+                    ],
+                    // columns: [
+                    //   DataColumn(
+                    //     label: Text(
+                    //       'Article No.',
+                    //       style: GoogleFonts.notoSans(
+                    //         fontSize: 30,
+                    //         fontWeight: FontWeight.normal,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   DataColumn(
+                    //     label: Text(
+                    //       'Model',
+                    //       style: GoogleFonts.notoSans(
+                    //         fontSize: 30,
+                    //         fontWeight: FontWeight.normal,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   DataColumn(
+                    //     label: Text(
+                    //       'Qty.',
+                    //       style: GoogleFonts.notoSans(
+                    //         fontSize: 30,
+                    //         fontWeight: FontWeight.normal,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ],
+                    rows: [
+                      DataRow(
+                        cells: [
+                          DataCell(
+                            Text(
+                              item.article.articleNo,
+                              style: GoogleFonts.notoSans(
+                                fontSize: 30,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              item.article.model,
+                              style: GoogleFonts.notoSans(
+                                fontSize: 30,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text.rich(
+                              TextSpan(
+                                text: ' x ',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                children: <InlineSpan>[
+                                  TextSpan(
+                                    text: '${item.qty}',
+                                    style: GoogleFonts.notoSans(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(
+                                          255, 252, 95, 95),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

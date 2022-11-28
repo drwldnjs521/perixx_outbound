@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:perixx_outbound/Presentation/size_config.dart';
 
 typedef DialogOptionBuilder<T> = Map<String, T?> Function();
 
@@ -9,20 +10,22 @@ Future<T?> showGenericDialog<T>({
   required String content,
   required DialogOptionBuilder optionsBuilder,
 }) {
+  SizeConfig.init(context);
   final options = optionsBuilder();
   if (options.isNotEmpty) {
     return Get.dialog(
       AlertDialog(
         title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(
-              height: 50,
+            SizedBox(
+              height: SizeConfig.safeVertical * 0.4,
             ),
             Text(
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 40,
+                fontSize: 100,
               ),
               textAlign: TextAlign.center,
             ),
@@ -30,13 +33,7 @@ Future<T?> showGenericDialog<T>({
         ),
         content: Builder(
           builder: (context) {
-            // Get available height and width of the build area of this widget. Make a choice depending on the size.
-            var height = MediaQuery.of(context).size.height;
-            var width = MediaQuery.of(context).size.width;
-
-            return SizedBox(
-              height: height - 900,
-              width: width - 400,
+            return Center(
               child: Column(
                 children: <Widget>[
                   const SizedBox(
@@ -108,13 +105,7 @@ Future<T?> showGenericDialog<T>({
         ),
         content: Builder(
           builder: (context) {
-            // Get available height and width of the build area of this widget. Make a choice depending on the size.
-            var height = MediaQuery.of(context).size.height;
-            var width = MediaQuery.of(context).size.width;
-
-            return SizedBox(
-              height: height - 900,
-              width: width - 400,
+            return Center(
               child: Column(
                 children: <Widget>[
                   const SizedBox(
@@ -147,6 +138,7 @@ Future<T?> showGenericDialogWithUserName<T>({
   required String content,
   required DialogOptionBuilder optionsBuilder,
 }) {
+  SizeConfig.init(context);
   final options = optionsBuilder();
   return Get.dialog(
     AlertDialog(
@@ -168,12 +160,7 @@ Future<T?> showGenericDialogWithUserName<T>({
       content: Builder(
         builder: (context) {
           // Get available height and width of the build area of this widget. Make a choice depending on the size.
-          var height = MediaQuery.of(context).size.height;
-          var width = MediaQuery.of(context).size.width;
-
-          return SizedBox(
-            height: height - 900,
-            width: width - 400,
+          return Center(
             child: Column(
               children: <Widget>[
                 const SizedBox(

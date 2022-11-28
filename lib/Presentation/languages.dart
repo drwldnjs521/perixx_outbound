@@ -14,6 +14,8 @@ class Languages extends Translations {
           'user_not_exists': 'User Not Found',
           'wrong_password': 'Wrong Password',
           'process_failed': 'Failed to process',
+          'no_result': 'Not Found',
+          'no_database_connection': 'Database Connection failed',
         },
         'ge_GE': {
           'greeting': 'Hallo',
@@ -28,6 +30,8 @@ class Languages extends Translations {
           'user_not_exists': 'Nutzer nicht gefunden',
           'wrong_password': 'Falsches Passwort',
           'process_failed': 'Bearbeitung fehlgeschlagen',
+          'no_result': 'Nichts gefunden',
+          'no_database_connection': 'Datenbankverbindung fehlgeschlagen',
         }
       };
 }
