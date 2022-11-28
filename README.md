@@ -34,8 +34,7 @@ __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf könn
 - [ ] Test(Unit, Widget, Integration) und Continuous Integration (CI)
 - [x] Verbindung zwischen der Datenbank und dem Programm herstellen
 - [ ] Gedanken machen, wie die Datenbank kontrolliert werden kann, wenn mehrere Benutzer gleichzeitig versuchen, dieselbe Daten zu ändern.
-- [x] Orderlist implementieren
-<br/>
+- [x] Orderlist implementieren <br/>
 
 <mark> Nächste Besprechung : am 28.11.2022 um 14:00 Uhr </mark>
 
