@@ -29,7 +29,7 @@ __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf könn
 
 <mark> Nächste Besprechung : am 14.11.2022 um 14:00 Uhr </mark>
 
-**2. Zusammenfassung der ersten Besprechung am 14.11.2022**
+**2. Zusammenfassung der zweiten Besprechung am 14.11.2022**
 
 - [ ] Test(Unit, Widget, Integration) und Continuous Integration (CI)
 - [x] Verbindung zwischen der Datenbank und dem Programm herstellen
