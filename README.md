@@ -19,7 +19,7 @@ Please visit the link to follow up the project : [Jeewon's Bachelor thesis](http
 
 **1. Zusammenfassung der ersten Besprechung am 31.10.2022**
 
-- [ ] Zum "ODERLIST" sind 'Date range picker' und 'dropdown' Widgets notwendig zu filtern.
+- [x] Zum "ODERLIST" sind 'Date range picker' und 'dropdown' Widgets notwendig zu filtern.
 - [x] Implementierung von "flutter_localizations" für verschiedene Spracheinstellungen.
 - [ ] Continuous Integration (CI)
 - [x] Zur besseren Veranschaulichung ist es empfehlenswert, alle möglichen Anforderungen zu dokumentieren und wie sie umgesetzt werden können .
@@ -28,4 +28,14 @@ Please visit the link to follow up the project : [Jeewon's Bachelor thesis](http
 __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf können die Besprechungen auch häufiger stattfinden.__
 
 <mark> Nächste Besprechung : am 14.11.2022 um 14:00 Uhr </mark>
+
+**2. Zusammenfassung der ersten Besprechung am 14.11.2022**
+
+- [ ] Test(Unit, Widget, Integration) und Continuous Integration (CI)
+- [x] Verbindung zwischen der Datenbank und dem Programm herstellen
+- [ ] Gedanken machen, wie die Datenbank kontrolliert werden kann, wenn mehrere Benutzer gleichzeitig versuchen, dieselbe Daten zu ändern.
+- [x] Orderlist implementieren
+<br/>
+
+<mark> Nächste Besprechung : am 28.11.2022 um 14:00 Uhr </mark>
 
