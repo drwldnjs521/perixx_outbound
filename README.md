@@ -48,5 +48,5 @@ __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf könn
 - [ ] Nicht deutliche Ausdrücke in den Stakeholder Requirements korrigieren/ergänzen
 - [ ] Eine empirische Auswertung mit Fragenboge <br/>
 
-<mark> Nächste Besprechung : am 28.11.2022 um 14:00 Uhr </mark>
+<mark> Nächste Besprechung : am 12.12.2022 um 14:00 Uhr </mark>
 
