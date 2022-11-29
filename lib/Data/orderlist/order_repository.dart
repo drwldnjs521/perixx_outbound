@@ -43,6 +43,22 @@ class OrderRepository {
   //   return orderList;
   // }
 
+  Future<List<Order>> getAllOrder() async {
+    List<Order> orderList = [];
+    Results results;
+    results = await _conn.query(
+      allOrder,
+    );
+
+    results
+        .map(
+          (row) => Order.fromRow(row.fields),
+        )
+        .forEach((e) => orderList.addOrder(e));
+
+    return orderList;
+  }
+
   Future<List<Order>> getOrderBetweenByStatus({
     required String begin,
     required String end,

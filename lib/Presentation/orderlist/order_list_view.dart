@@ -25,7 +25,8 @@ class OrderListView extends StatelessWidget {
           final order = orders[index];
           switch (order.status.name) {
             case 'scanned':
-              return _showOrder(context, Colors.indigo, index, order);
+              return _showOrder(context,
+                  const Color.fromARGB(255, 167, 255, 85), index, order);
             case 'shipped':
               return _showOrder(context, Colors.yellow, index, order);
             default:
@@ -178,6 +179,7 @@ class OrderListView extends StatelessWidget {
                     style: GoogleFonts.notoSans(
                       fontSize: 30,
                       fontWeight: FontWeight.normal,
+                      color: const Color.fromARGB(255, 248, 101, 101),
                     ),
                   ),
                 ],

@@ -44,3 +44,37 @@ class OrderService {
     _orderRepo.initialize();
   }
 }
+
+// class OrderController extends GetxController {
+//   static final OrderRepository _orderRepo = OrderRepository();
+
+//   final allOrderList = _orderRepo.getAllOrder().obs;
+
+//   Future<List<Order>> getOrderBetweenWithStatus({
+//     required String begin,
+//     required String end,
+//     required String? status,
+//   }) async {
+//     return _orderRepo.getOrderBetweenByStatus(
+//       begin: begin,
+//       end: end,
+//       status: status,
+//     );
+//   }
+
+//   Future<List<Order>> getOrderByEan({required List<String> eans}) async {
+//     return _orderRepo.getOrderByEan(eans: eans);
+//   }
+
+//   Future<void> close() async {
+//     await _orderRepo.close();
+//   }
+
+//   Future<void> open() async {
+//     await _orderRepo.open();
+//   }
+
+//   Future<void> initialize() async {
+//     _orderRepo.initialize();
+//   }
+// }

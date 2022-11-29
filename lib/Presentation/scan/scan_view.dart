@@ -4,8 +4,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:perixx_outbound/Application/login/auth_service.dart';
-import 'package:perixx_outbound/Application/orderlist/order_service.dart';
-import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
 
@@ -24,48 +22,52 @@ class _ScanViewState extends State<ScanView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
-    return FutureBuilder(
-        future: OrderService.mysql().getOrderByEan(eans: eanList),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                final allOrders = snapshot.data as List<Order>;
-                return Scaffold(
-                  appBar: _showAppBar(),
-                  body: _showScanFilter(),
-                );
-              } else {
-                return Scaffold(
-                  appBar: _showAppBar(),
-                  body: _showScanFilter(),
-                  // body: CustomScrollView(
-                  //   slivers: <Widget>[
-                  //     _showAppBar(),
-                  //     _showScanFilter(),
-                  //     SliverToBoxAdapter(
-                  //       child: SizedBox(
-                  //         width: SizeConfig.safeHorizontal * 0.3,
-                  //         height: SizeConfig.safeVertical * 0.6,
-                  //         child: Center(
-                  //           child: Text(
-                  //             'no_result'.tr,
-                  //             style: GoogleFonts.notoSans(
-                  //               fontSize: 100,
-                  //               fontWeight: FontWeight.w500,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                );
-              }
-            default:
-              return const Center(child: CircularProgressIndicator());
-          }
-        });
+    // return FutureBuilder(
+    //     future: OrderService.mysql().getOrderByEan(eans: eanList),
+    //     builder: (context, snapshot) {
+    //       switch (snapshot.connectionState) {
+    //         case ConnectionState.done:
+    //           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+    //             final allOrders = snapshot.data as List<Order>;
+    //             return Scaffold(
+    //               appBar: _showAppBar(),
+    //               body: _showScanFilter(),
+    //             );
+    //           } else {
+    //             return Scaffold(
+    //               appBar: _showAppBar(),
+    //               body: _showScanFilter(),
+    //               // body: CustomScrollView(
+    //               //   slivers: <Widget>[
+    //               //     _showAppBar(),
+    //               //     _showScanFilter(),
+    //               //     SliverToBoxAdapter(
+    //               //       child: SizedBox(
+    //               //         width: SizeConfig.safeHorizontal * 0.3,
+    //               //         height: SizeConfig.safeVertical * 0.6,
+    //               //         child: Center(
+    //               //           child: Text(
+    //               //             'no_result'.tr,
+    //               //             style: GoogleFonts.notoSans(
+    //               //               fontSize: 100,
+    //               //               fontWeight: FontWeight.w500,
+    //               //             ),
+    //               //           ),
+    //               //         ),
+    //               //       ),
+    //               //     ),
+    //               //   ],
+    //               // ),
+    //             );
+    //           }
+    //         default:
+    //           return const Center(child: CircularProgressIndicator());
+    //       }
+    //     });
+    return Scaffold(
+      appBar: _showAppBar(),
+      body: _showScanFilter(),
+    );
   }
 
   AppBar _showAppBar() {

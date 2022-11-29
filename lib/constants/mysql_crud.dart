@@ -13,13 +13,12 @@ const createScannedTable = '''CREATE TABLE IF NOT EXISTS scanned (
                 FOREIGN KEY (reference_no) REFERENCES valid_order(reference_no)
               );''';
 
-// const orderToday =
-//     '''SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
-// FROM valid_order
-// LEFT JOIN (SELECT reference_no, assigner AS packed_by FROM packed_by) AS a USING(reference_no)
-// LEFT JOIN (SELECT reference_no, assigner AS scanned_by FROM scanned_by) AS b USING(reference_no)
-// WHERE valid_order.created_date = ?) AS order_table
-// LEFT JOIN article ON article.id = order_table.article_id''';
+const allOrder =
+    '''SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
+FROM valid_order
+LEFT JOIN (SELECT reference_no, assigner AS packed_by FROM packed_by) AS a USING(reference_no)
+LEFT JOIN (SELECT reference_no, assigner AS scanned_by FROM scanned_by) AS b USING(reference_no)
+LEFT JOIN article ON article.id = order_table.article_id''';
 
 // const orderOn =
 //     '''SELECT reference_no, created_date, quantity, tracking_no, shipped_to, path_cn23, order_table.status, scanned_by, packed_by, article_id, article_no, EAN, model, path  FROM (SELECT *
