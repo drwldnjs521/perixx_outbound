@@ -66,7 +66,73 @@ class _ScanViewState extends State<ScanView> {
     //     });
     return Scaffold(
       appBar: _showAppBar(),
-      body: _showScanFilter(),
+      body: Column(
+        children: <Widget>[
+          _showScanFilter(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: eanList.map((ean) {
+                return Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      height: 100,
+                      width: 150,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.lightBlueAccent,
+                          width: 2,
+                        ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(40),
+                        ),
+                      ),
+                      child: Text(ean),
+                    ),
+                    Positioned(
+                      right: 9,
+                      top: 9,
+                      child: SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: FloatingActionButton(
+                          child: const Icon(
+                            Icons.highlight_remove,
+                          ),
+                          onPressed: () => setState(() {
+                            eanList.remove(ean);
+                          }),
+                        ),
+                      ),
+                    ),
+                    // child: Container(
+                    //   padding: const EdgeInsets.all(2),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.red,
+                    //     borderRadius: BorderRadius.circular(6),
+                    //   ),
+                    //   constraints: const BoxConstraints(
+                    //     minWidth: 20,
+                    //     minHeight: 20,
+                    //   ),
+                    //   child: const Text(
+                    //     '1',
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 8,
+                    //     ),
+                    //     textAlign: TextAlign.center,
+                    //   ),
+                    // ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -169,12 +235,17 @@ class _ScanViewState extends State<ScanView> {
         child: TextField(
           controller: _textController,
           maxLines: 1,
+          autofocus: true,
           cursorColor: Colors.black,
           style: GoogleFonts.notoSans(
             fontSize: 40,
             fontWeight: FontWeight.w400,
             color: const Color.fromARGB(255, 131, 131, 131),
           ),
+          onSubmitted: (value) {
+            eanList.add(value);
+            value = '';
+          },
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(10),
             // filled: true,

@@ -44,6 +44,7 @@ __weitere Besprechungen findet erst alle zwei Wochen statt. Je nach Bedarf könn
 - [ ] Gedanken machen, wie die Datenbank kontrolliert werden kann, wenn mehrere Benutzer gleichzeitig versuchen, dieselbe Daten zu ändern. => Firebase(zur automatichen Meldungen von Fehlern bei der Verwendung ist auch nützlich)
 - [ ] Proportionale Größenangaben, damit das Erscheinungsbild auf verschiedenen Geräten gleich sein kann 
 - [ ] Imprementieren Scannen / Print 
+- [ ] Hinzufügen  eine Anforderung "Scannen mit einer Scanpistole" zu den Stakeholder Requirements 
 - [ ] Eine empirische Auswertung mit Fragenboge <br/>
 
 <mark> Nächste Besprechung : am 28.11.2022 um 14:00 Uhr </mark>
