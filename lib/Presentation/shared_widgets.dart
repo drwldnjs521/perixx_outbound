@@ -12,7 +12,7 @@ import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dar
 
 Widget showAppBar(
   BuildContext context,
-  Widget widget,
+  String title,
 ) {
   final authController = Get.find<AuthController>();
   final orderController = Get.find<OrderController>();
@@ -87,42 +87,41 @@ Widget showAppBar(
     ),
     //FlexibleSpaceBar
     // expandedHeight: SizeConfig.safeVertical * 0.31,
-    expandedHeight: SizeConfig.safeVertical * 0.4,
-    collapsedHeight: SizeConfig.safeVertical * 0.13,
+    expandedHeight: SizeConfig.safeVertical * 0.27,
+    collapsedHeight: SizeConfig.safeVertical * 0.1,
+
     backgroundColor: const Color.fromARGB(255, 195, 194, 194),
     forceElevated: true,
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(20),
-      child: widget,
-      // child: Container(
-      //   width: double.maxFinite,
-      //   height: SizeConfig.safeVertical * 0.09,
-      //   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      //   decoration: BoxDecoration(
-      //     color: const Color.fromARGB(255, 255, 255, 255),
-      //     borderRadius: const BorderRadius.only(
-      //       topLeft: Radius.circular(30),
-      //       topRight: Radius.circular(30),
-      //     ),
-      //     boxShadow: [
-      //       BoxShadow(
-      //         color: Colors.black.withOpacity(0.3),
-      //         blurRadius: 15,
-      //         spreadRadius: 5,
-      //       ),
-      //     ],
-      //   ),
-      //   child: Center(
-      //     // child: Text(
-      //     //   'In/Outbound',
-      //     //   style: TextStyle(
-      //     //       fontSize: 40,
-      //     //       fontWeight: FontWeight.w700,
-      //     //       color: Color.fromARGB(221, 89, 89, 89)),
-      //     // ),
-      //     child: widget,
-      //   ),
-      // ),
+      child: Container(
+        width: double.maxFinite,
+        height: SizeConfig.safeVertical * 0.052,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 15,
+              spreadRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: const TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+                color: Color.fromARGB(221, 89, 89, 89)),
+          ),
+        ),
+      ),
     ),
   );
 }

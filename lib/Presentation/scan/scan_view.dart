@@ -73,8 +73,9 @@ class _ScanViewState extends State<ScanView> {
         slivers: <Widget>[
           showAppBar(
             context,
-            _showScanEditor(),
+            "SCAN",
           ),
+          _showScanEditor(),
           _showOrderToHandle(),
 
           // SliverToBoxAdapter(
@@ -149,254 +150,256 @@ class _ScanViewState extends State<ScanView> {
   }
 
   Widget _showScanEditor() {
-    return Card(
-      elevation: 40,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
+    return SliverToBoxAdapter(
+      child: Card(
+        elevation: 40,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+          side: BorderSide(
+            color: Color.fromARGB(255, 34, 34, 34),
+          ),
         ),
-        side: BorderSide(
-          color: Color.fromARGB(255, 34, 34, 34),
-        ),
-      ),
-      // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
 
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        // child: SizedBox(
-        //   width: 500,
-        //   child: Row(
-        //     children: <Widget>[
-        //       TextField(
-        //         autofocus: true,
-        //         controller: _eanController,
-        //         decoration: const InputDecoration(
-        //           icon: FaIcon(
-        //             FontAwesomeIcons.searchengin,
-        //             size: 50,
-        //           ),
-        //         ),
-        //         style: GoogleFonts.notoSans(
-        //           fontSize: 40,
-        //           fontWeight: FontWeight.w500,
-        //         ),
-        //         textAlign: TextAlign.center,
-        //       ),
-        //       const SizedBox(
-        //         width: 50,
-        //       ),
-        //       TextButton(
-        //         onPressed: () {
-        //           if (_eanController.text.isNotEmpty) {
-        //             scanController.addEan(_eanController.text);
-        //             _eanController.text = "";
-        //           }
-        //         },
-        //         child: Text(
-        //           'ENTER',
-        //           style: GoogleFonts.notoSans(
-        //             fontSize: 40,
-        //             fontWeight: FontWeight.w500,
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         height: 50,
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        child: SizedBox(
-          height: 500,
-          child: Column(
-            children: <Widget>[
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 500,
-                      // child: TextField(
-                      //   autofocus: true,
-                      //   controller: _eanController,
-                      //   decoration: const InputDecoration(
-                      //     icon: FaIcon(
-                      //       FontAwesomeIcons.searchengin,
-                      //       size: 50,
-                      //     ),
-                      //   ),
-                      //   style: GoogleFonts.notoSans(
-                      //     fontSize: 40,
-                      //     fontWeight: FontWeight.w500,
-                      //   ),
-                      //   textAlign: TextAlign.center,
-                      // ),
-                      child: RawKeyboardListener(
-                        autofocus: true,
-                        focusNode: FocusNode(onKey: (node, event) {
-                          if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                            return KeyEventResult
-                                .handled; // prevent passing the event into the TextField
-                          }
-                          return KeyEventResult
-                              .ignored; // pass the event to the TextField
-                        }),
-                        onKey: (event) async {
-                          if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                            setState(() {
-                              if (orderController
-                                      .getArticleByEan(_eanController.text) !=
-                                  null) {
-                                _eanList.add(_eanController.text);
-                              } else {
-                                openSnackbar(
-                                  title: 'warning'.tr,
-                                  message: 'no_article_found'.tr,
-                                );
-                              }
-                              _eanController.clear();
-                            });
-                            await orderController
-                                .getOrderExactSameEan(_eanList);
-                            if (orderController.orderList.isNotEmpty) {
-                              final selectedOrder =
-                                  orderController.orderList[0];
-                              Get.toNamed("/PRINT",
-                                  arguments: {"order": selectedOrder});
-                              _eanList.clear();
-                              orderController.updateStatusToScanned(
-                                  order: selectedOrder,
-                                  assigner:
-                                      authController.currentUser!.userName!);
-                            } else {
-                              await orderController
-                                  .getProcessingOrderByEan(_eanList);
-                              setState(() {
-                                _showOrders = true;
-                              });
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          // child: SizedBox(
+          //   width: 500,
+          //   child: Row(
+          //     children: <Widget>[
+          //       TextField(
+          //         autofocus: true,
+          //         controller: _eanController,
+          //         decoration: const InputDecoration(
+          //           icon: FaIcon(
+          //             FontAwesomeIcons.searchengin,
+          //             size: 50,
+          //           ),
+          //         ),
+          //         style: GoogleFonts.notoSans(
+          //           fontSize: 40,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //         textAlign: TextAlign.center,
+          //       ),
+          //       const SizedBox(
+          //         width: 50,
+          //       ),
+          //       TextButton(
+          //         onPressed: () {
+          //           if (_eanController.text.isNotEmpty) {
+          //             scanController.addEan(_eanController.text);
+          //             _eanController.text = "";
+          //           }
+          //         },
+          //         child: Text(
+          //           'ENTER',
+          //           style: GoogleFonts.notoSans(
+          //             fontSize: 40,
+          //             fontWeight: FontWeight.w500,
+          //           ),
+          //         ),
+          //       ),
+          //       const SizedBox(
+          //         height: 50,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          child: SizedBox(
+            height: 500,
+            child: Column(
+              children: <Widget>[
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 500,
+                        // child: TextField(
+                        //   autofocus: true,
+                        //   controller: _eanController,
+                        //   decoration: const InputDecoration(
+                        //     icon: FaIcon(
+                        //       FontAwesomeIcons.searchengin,
+                        //       size: 50,
+                        //     ),
+                        //   ),
+                        //   style: GoogleFonts.notoSans(
+                        //     fontSize: 40,
+                        //     fontWeight: FontWeight.w500,
+                        //   ),
+                        //   textAlign: TextAlign.center,
+                        // ),
+                        child: RawKeyboardListener(
+                          autofocus: true,
+                          focusNode: FocusNode(onKey: (node, event) {
+                            if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                              return KeyEventResult
+                                  .handled; // prevent passing the event into the TextField
                             }
-                          }
-                        },
-                        child: TextField(
-                          controller: _eanController,
-                          decoration: const InputDecoration(
-                            icon: FaIcon(
-                              FontAwesomeIcons.searchengin,
-                              size: 50,
+                            return KeyEventResult
+                                .ignored; // pass the event to the TextField
+                          }),
+                          onKey: (event) async {
+                            if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                              setState(() {
+                                if (orderController
+                                        .getArticleByEan(_eanController.text) !=
+                                    null) {
+                                  _eanList.add(_eanController.text);
+                                } else {
+                                  openSnackbar(
+                                    title: 'warning'.tr,
+                                    message: 'no_article_found'.tr,
+                                  );
+                                }
+                                _eanController.clear();
+                              });
+                              await orderController
+                                  .getOrderExactSameEan(_eanList);
+                              if (orderController.orderList.isNotEmpty) {
+                                final selectedOrder =
+                                    orderController.orderList[0];
+                                Get.toNamed("/PRINT",
+                                    arguments: {"order": selectedOrder});
+                                _eanList.clear();
+                                orderController.updateStatusToScanned(
+                                    order: selectedOrder,
+                                    assigner:
+                                        authController.currentUser!.userName!);
+                              } else {
+                                await orderController
+                                    .getProcessingOrderByEan(_eanList);
+                                setState(() {
+                                  _showOrders = true;
+                                });
+                              }
+                            }
+                          },
+                          child: TextField(
+                            controller: _eanController,
+                            decoration: const InputDecoration(
+                              icon: FaIcon(
+                                FontAwesomeIcons.searchengin,
+                                size: 50,
+                              ),
                             ),
+                            style: GoogleFonts.notoSans(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                            // onChanged: (value) {
+                            //   setState(() {
+                            //     _scannedEan = value;
+                            //     _textController.clear();
+                            //   });
+                            // },
                           ),
-                          style: GoogleFonts.notoSans(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                          // onChanged: (value) {
-                          //   setState(() {
-                          //     _scannedEan = value;
-                          //     _textController.clear();
-                          //   });
-                          // },
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    // TextButton(
-                    //   onPressed: () => setState(() {
-                    //     _eanList.add(_eanController.text);
-                    //     _eanController.text = "";
-                    //     debugPrint(_eanList.length.toString());
-                    //   }),
-                    //   child: Text(
-                    //     'ENTER',
-                    //     style: GoogleFonts.notoSans(
-                    //       fontSize: 40,
-                    //       fontWeight: FontWeight.w500,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      // TextButton(
+                      //   onPressed: () => setState(() {
+                      //     _eanList.add(_eanController.text);
+                      //     _eanController.text = "";
+                      //     debugPrint(_eanList.length.toString());
+                      //   }),
+                      //   child: Text(
+                      //     'ENTER',
+                      //     style: GoogleFonts.notoSans(
+                      //       fontSize: 40,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _eanList.map((ean) {
-                    return Stack(
-                      children: <Widget>[
-                        if (orderController.getArticleByEan(ean) != null) ...[
-                          _showArticle(orderController.getArticleByEan(ean)!),
-                        ] else ...[
-                          Text(ean),
-                        ],
+                const SizedBox(
+                  height: 50,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _eanList.map((ean) {
+                      return Stack(
+                        children: <Widget>[
+                          if (orderController.getArticleByEan(ean) != null) ...[
+                            _showArticle(orderController.getArticleByEan(ean)!),
+                          ] else ...[
+                            Text(ean),
+                          ],
 
-                        Positioned(
-                          right: 4,
-                          top: 9,
-                          child: SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: FloatingActionButton(
-                              child: const Icon(
-                                Icons.highlight_remove,
+                          Positioned(
+                            right: 4,
+                            top: 9,
+                            child: SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: FloatingActionButton(
+                                child: const Icon(
+                                  Icons.highlight_remove,
+                                ),
+                                onPressed: () => setState(() {
+                                  _eanList.remove(ean);
+                                }),
                               ),
-                              onPressed: () => setState(() {
-                                _eanList.remove(ean);
-                              }),
                             ),
                           ),
-                        ),
-                        // child: Container(
-                        //   padding: const EdgeInsets.all(2),
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.red,
-                        //     borderRadius: BorderRadius.circular(6),
-                        //   ),
-                        //   constraints: const BoxConstraints(
-                        //     minWidth: 20,
-                        //     minHeight: 20,
-                        //   ),
-                        //   child: const Text(
-                        //     '1',
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: 8,
-                        //     ),
-                        //     textAlign: TextAlign.center,
-                        //   ),
-                        // ),
-                      ],
-                    );
-                  }).toList(),
+                          // child: Container(
+                          //   padding: const EdgeInsets.all(2),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.red,
+                          //     borderRadius: BorderRadius.circular(6),
+                          //   ),
+                          //   constraints: const BoxConstraints(
+                          //     minWidth: 20,
+                          //     minHeight: 20,
+                          //   ),
+                          //   child: const Text(
+                          //     '1',
+                          //     style: TextStyle(
+                          //       color: Colors.white,
+                          //       fontSize: 8,
+                          //     ),
+                          //     textAlign: TextAlign.center,
+                          //   ),
+                          // ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
 
-              // if (_eanList.isNotEmpty) ...[
-              //   // Obx(() {
-              //   //   debugPrint(scanController.eanList.length.toString());
-              //   //   debugPrint(orderController
-              //   //       .getArticleByEan(scanController.eanList.last)
-              //   //       .toString());
-              //   //   return _showArticle(orderController
-              //   //       .getArticleByEan(scanController.eanList.last));
-              //   // }),
-              //   SingleChildScrollView(
-              //     scrollDirection: Axis.horizontal,
-              //     child: Row(
-              //       children: _eanList
-              //           .map((ean) =>
-              //               _showArticle(orderController.getArticleByEan(ean)))
-              //           .toList(),
-              //     ),
-              //   ),
-              // ],
-            ],
+                // if (_eanList.isNotEmpty) ...[
+                //   // Obx(() {
+                //   //   debugPrint(scanController.eanList.length.toString());
+                //   //   debugPrint(orderController
+                //   //       .getArticleByEan(scanController.eanList.last)
+                //   //       .toString());
+                //   //   return _showArticle(orderController
+                //   //       .getArticleByEan(scanController.eanList.last));
+                //   // }),
+                //   SingleChildScrollView(
+                //     scrollDirection: Axis.horizontal,
+                //     child: Row(
+                //       children: _eanList
+                //           .map((ean) =>
+                //               _showArticle(orderController.getArticleByEan(ean)))
+                //           .toList(),
+                //     ),
+                //   ),
+                // ],
+              ],
+            ),
           ),
         ),
       ),

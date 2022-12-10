@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Application/app_state.dart';
-import 'package:perixx_outbound/Application/login/auth_controller.dart';
 import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
 import 'package:perixx_outbound/Presentation/orderlist/order_list_view.dart';
 import 'package:perixx_outbound/Presentation/shared_widgets.dart';
@@ -21,7 +20,6 @@ class OrderView extends StatefulWidget {
 }
 
 class _OrderViewState extends State<OrderView> {
-  final _authController = Get.find<AuthController>();
   final _orderController = Get.find<OrderController>();
 
   String _startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -115,8 +113,9 @@ class _OrderViewState extends State<OrderView> {
       body: CustomScrollView(slivers: <Widget>[
         showAppBar(
           context,
-          _showFilter(),
+          "In/OutBound",
         ),
+        _showFilter(),
         Obx(
           () => _orderController.pageState.value == AppState.loading
               ? SliverToBoxAdapter(
@@ -143,7 +142,7 @@ class _OrderViewState extends State<OrderView> {
                       child: Center(
                         child: Padding(
                           padding: EdgeInsets.only(
-                              top: SizeConfig.safeVertical * 0.18),
+                              top: SizeConfig.safeVertical * 0.3),
                           child: Text(
                             'no_result'.tr,
                             style: GoogleFonts.notoSans(
@@ -525,149 +524,151 @@ class _OrderViewState extends State<OrderView> {
   //   );
   // }
   Widget _showFilter() {
-    return Card(
-      elevation: 40,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
+    return SliverToBoxAdapter(
+      child: Card(
+        elevation: 40,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+          side: BorderSide(
+            color: Color.fromARGB(255, 34, 34, 34),
+          ),
         ),
-        side: BorderSide(
-          color: Color.fromARGB(255, 34, 34, 34),
-        ),
-      ),
-      // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        margin: const EdgeInsets.fromLTRB(15, 15, 15, 0),
 
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TextButton(
-                style: const ButtonStyle(),
-                onPressed: () async {
-                  DateTimeRange? pickedRange = await showDateRangePicker(
-                    context: context,
-                    firstDate: DateTime(DateTime.now().year - 1),
-                    lastDate: DateTime(DateTime.now().year + 1),
-                    // initialDateRange: DateTimeRange(
-                    //   end: DateTime(DateTime.now().year, DateTime.now().month,
-                    //       DateTime.now().day + 13),
-                    //   start: DateTime.now(),
-                    // ),
-                  );
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                TextButton(
+                  style: const ButtonStyle(),
+                  onPressed: () async {
+                    DateTimeRange? pickedRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime(DateTime.now().year - 1),
+                      lastDate: DateTime(DateTime.now().year + 1),
+                      // initialDateRange: DateTimeRange(
+                      //   end: DateTime(DateTime.now().year, DateTime.now().month,
+                      //       DateTime.now().day + 13),
+                      //   start: DateTime.now(),
+                      // ),
+                    );
 
-                  if (pickedRange != null) {
-                    String startDate =
-                        DateFormat('yyyy-MM-dd').format(pickedRange.start);
-                    String endDate =
-                        DateFormat('yyyy-MM-dd').format(pickedRange.end);
-                    setState(() {
-                      _startDate = startDate;
-                      _endDate = endDate;
-                    });
-                    await _orderController.getOrderBetweenByStatus(
-                        start: _startDate, end: _endDate, status: _status);
-                  }
+                    if (pickedRange != null) {
+                      String startDate =
+                          DateFormat('yyyy-MM-dd').format(pickedRange.start);
+                      String endDate =
+                          DateFormat('yyyy-MM-dd').format(pickedRange.end);
+                      setState(() {
+                        _startDate = startDate;
+                        _endDate = endDate;
+                      });
+                      await _orderController.getOrderBetweenByStatus(
+                          start: _startDate, end: _endDate, status: _status);
+                    }
 
-                  // orderController.getOrderBetweenByStatus(
-                  //     _startDate, _endDate, _status);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: SizeConfig.safeVertical * 0.05,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.date_range,
-                        size: 60,
-                      ),
-                      if (_startDate == _endDate) ...[
-                        Text(
-                          " $_startDate",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blueGrey,
-                          ),
+                    // orderController.getOrderBetweenByStatus(
+                    //     _startDate, _endDate, _status);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: SizeConfig.safeVertical * 0.05,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Icon(
+                          Icons.date_range,
+                          size: 60,
                         ),
-                      ] else ...[
-                        Text(
-                          " $_startDate - $_endDate",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w400,
+                        if (_startDate == _endDate) ...[
+                          Text(
+                            " $_startDate",
+                            style: GoogleFonts.notoSans(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blueGrey,
+                            ),
                           ),
-                        ),
+                        ] else ...[
+                          Text(
+                            " $_startDate - $_endDate",
+                            style: GoogleFonts.notoSans(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              // const Icon(
-              //   Icons.more_vert,
-              //   size: 70,
-              //   color: Color.fromARGB(159, 57, 57, 57),
-              // ),
-              const VerticalDivider(
-                color: Color.fromARGB(111, 68, 67, 67), //color of divider
-                width: 10, //width space of divider
-                thickness: 2, //thickness of divier line
-                indent: 15, //Spacing at the top of divider.
-                endIndent: 15, //Spacing at the bottom of divider.
-              ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton2(
-                  // hint: Text(
-                  //   'Selected Status',
-                  //   style: GoogleFonts.notoSans(
-                  //     fontSize: 40,
-                  //     fontWeight: FontWeight.w400,
-                  //     color: Colors.blueGrey,
-                  //   ),
-                  // ),
-                  value: _status,
-                  // selectedItemBuilder: (BuildContext context) => menus
-                  //     .map<Widget>((menu) => Row(
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           children: <Widget>[
-                  //             Padding(
-                  //               padding: const EdgeInsets.only(left: 16.0),
-                  //               child: menu.icon,
-                  //             ),
-                  //             Padding(
-                  //               padding: const EdgeInsets.only(left: 20),
-                  //               child: Text(
-                  //                 menu.name,
-                  //                 style: GoogleFonts.notoSans(
-                  //                   fontSize: 40,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: Colors.blueGrey,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ))
-                  //     .toList(),
-                  items: _dropdownItems,
-                  customItemsHeights: _customsItemsHeight,
-                  onChanged: (value) async {
-                    setState(() {
-                      _status = value as String;
-                    });
-                    await _orderController.getOrderBetweenByStatus(
-                        start: _startDate, end: _endDate, status: _status);
-                  },
-                  buttonHeight: 60,
-                  icon: const FaIcon(FontAwesomeIcons.sortDown),
-                  iconOnClick: const FaIcon(FontAwesomeIcons.sortUp),
-                  iconSize: 50,
+                // const Icon(
+                //   Icons.more_vert,
+                //   size: 70,
+                //   color: Color.fromARGB(159, 57, 57, 57),
+                // ),
+                const VerticalDivider(
+                  color: Color.fromARGB(111, 68, 67, 67), //color of divider
+                  width: 10, //width space of divider
+                  thickness: 2, //thickness of divier line
+                  indent: 15, //Spacing at the top of divider.
+                  endIndent: 15, //Spacing at the bottom of divider.
                 ),
-              ),
-            ],
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    // hint: Text(
+                    //   'Selected Status',
+                    //   style: GoogleFonts.notoSans(
+                    //     fontSize: 40,
+                    //     fontWeight: FontWeight.w400,
+                    //     color: Colors.blueGrey,
+                    //   ),
+                    // ),
+                    value: _status,
+                    // selectedItemBuilder: (BuildContext context) => menus
+                    //     .map<Widget>((menu) => Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: <Widget>[
+                    //             Padding(
+                    //               padding: const EdgeInsets.only(left: 16.0),
+                    //               child: menu.icon,
+                    //             ),
+                    //             Padding(
+                    //               padding: const EdgeInsets.only(left: 20),
+                    //               child: Text(
+                    //                 menu.name,
+                    //                 style: GoogleFonts.notoSans(
+                    //                   fontSize: 40,
+                    //                   fontWeight: FontWeight.w400,
+                    //                   color: Colors.blueGrey,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ))
+                    //     .toList(),
+                    items: _dropdownItems,
+                    customItemsHeights: _customsItemsHeight,
+                    onChanged: (value) async {
+                      setState(() {
+                        _status = value as String;
+                      });
+                      await _orderController.getOrderBetweenByStatus(
+                          start: _startDate, end: _endDate, status: _status);
+                    },
+                    buttonHeight: 60,
+                    icon: const FaIcon(FontAwesomeIcons.sortDown),
+                    iconOnClick: const FaIcon(FontAwesomeIcons.sortUp),
+                    iconSize: 50,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
