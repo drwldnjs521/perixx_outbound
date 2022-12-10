@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:perixx_outbound/Data/login/auth_exceptions.dart';
-import 'package:perixx_outbound/Application/login/auth_service.dart';
+import 'package:perixx_outbound/Application/login/auth_controller.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/error_dialog.dart';
 
+//GetView is a const Stateless Widget that has a getter controller for a registered Controller, that's all.
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -13,13 +15,11 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  //declare a variable to keep track of the input text
+  final authController = Get.find<AuthController>();
+  final _formkey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
-  //declare a variable to hide and show the password
   bool _isObscure = true;
-  //declare a Globalkey
-  final _formkey = GlobalKey<FormState>();
 
   bool _tryValidation() {
     final isValid = _formkey.currentState!.validate();
@@ -110,8 +110,9 @@ class _LoginViewState extends State<LoginView> {
                                   keyboardType: TextInputType.emailAddress,
                                   key: const ValueKey(1),
                                   validator: (value) {
-                                    if (!value!.contains("@perixx.com")) {
-                                      return 'enter_valid_email'.tr;
+                                    if (value != null) {
+                                      return authController
+                                          .validateEmail(value);
                                     }
                                     return null;
                                   },
@@ -183,8 +184,9 @@ class _LoginViewState extends State<LoginView> {
                                   obscureText: _isObscure,
                                   key: const ValueKey(2),
                                   validator: (value) {
-                                    if (value!.length < 6) {
-                                      return "not_valid_password".tr;
+                                    if (value != null) {
+                                      return authController
+                                          .validatePassword(value);
                                     }
                                     return null;
                                   },
@@ -244,11 +246,11 @@ class _LoginViewState extends State<LoginView> {
                   onTap: () async {
                     if (_tryValidation()) {
                       try {
-                        await AuthService.firebase().logIn(
+                        await authController.logIn(
                           email: _email,
                           password: _password,
                         );
-                        Get.toNamed('/ORDERLIST');
+                        Get.offNamed('/ORDERLIST');
                       } on UserNotFoundAuthException catch (e) {
                         await showErrorDialog(
                           context,
@@ -298,13 +300,14 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ],
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             'Sign in',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 35,
-                                fontWeight: FontWeight.bold),
+                            style: GoogleFonts.notoSans(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

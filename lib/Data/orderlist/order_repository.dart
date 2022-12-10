@@ -1,19 +1,26 @@
 import 'package:intl/intl.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:perixx_outbound/Application/orderlist/mysql.dart';
+import 'package:perixx_outbound/Domain/orderlist/article.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/constants/mysql_crud.dart';
 
 class OrderRepository {
   final MySqlConnection _conn = Mysql.connection;
 
-  OrderRepository();
+  Future<List<Article>> getAllArticles() async {
+    List<Article> articleList = [];
+    Results results;
+    try {
+      results = await _conn.query(allArticles);
+    } catch (_) {
+      rethrow;
+    }
 
-  Future<void> open() async {
-    // create shipped table
-    await _conn.query(createShippedTable);
-    // create scannedBy table
-    await _conn.query(createScannedTable);
+    results.map((row) => Article.fromRow(row.fields)).forEach((article) {
+      articleList.add(article);
+    });
+    return articleList;
   }
 
   // Future<List<Order>> getOrderToday() async {
@@ -43,12 +50,15 @@ class OrderRepository {
   //   return orderList;
   // }
 
-  Future<List<Order>> getAllOrder() async {
+  Future<List<Order>> getTodayOrder() async {
     List<Order> orderList = [];
+
     Results results;
-    results = await _conn.query(
-      allOrder,
-    );
+    try {
+      results = await _conn.query(todayOrder);
+    } catch (_) {
+      rethrow;
+    }
 
     results
         .map(
@@ -59,34 +69,93 @@ class OrderRepository {
     return orderList;
   }
 
+  Future<List<Order>> getProcessingOrder() async {
+    List<Order> orderList = [];
+    Results results;
+    try {
+      results = await _conn.query(allProcessingOrder);
+    } catch (_) {
+      rethrow;
+    }
+    results
+        .map(
+          (row) => Order.fromRow(row.fields),
+        )
+        .forEach((e) => orderList.addOrder(e));
+
+    return orderList;
+  }
+
+  // Future<List<Order>> getAllOrder() async {
+  //   List<Order> orderList = [];
+  //      Results results;
+  //   try {
+  //     results = await _conn.query(allOrder);
+
+  //   } catch (_) {
+  //     rethrow;
+  //   }
+
+  //   results
+  //       .map(
+  //         (row) => Order.fromRow(row.fields),
+  //       )
+  //       .forEach((e) => orderList.addOrder(e));
+
+  //   return orderList;
+  // }
+
   Future<List<Order>> getOrderBetweenByStatus({
     required String begin,
     required String end,
-    required String? status,
+    required String status,
   }) async {
     List<Order> orderList = [];
     Results results;
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedBeginDate = formatter.format(DateTime.parse(begin));
     String formattedEndDate = formatter.format(DateTime.parse(end));
+    try {
+      results = await _conn.query(allArticles);
+    } catch (_) {
+      rethrow;
+    }
 
-    if (status != null && status != 'all') {
-      results = await _conn.query(
-        orderBetweenWithStatus,
-        [
-          formattedBeginDate,
-          formattedEndDate,
-          status,
-        ],
-      );
-    } else {
-      results = await _conn.query(
-        orderBetween,
-        [
-          formattedBeginDate,
-          formattedEndDate,
-        ],
-      );
+    switch (status) {
+      case "processing":
+        try {
+          results = await _conn.query(
+              processingOrderBetween, [formattedBeginDate, formattedEndDate]);
+        } catch (_) {
+          rethrow;
+        }
+        break;
+
+      case "scanned":
+        try {
+          results = await _conn.query(
+              scannedOrderBetween, [formattedBeginDate, formattedEndDate]);
+        } catch (_) {
+          rethrow;
+        }
+        break;
+
+      case "shipped":
+        try {
+          results = await _conn.query(
+              shippedOrderBetween, [formattedBeginDate, formattedEndDate]);
+        } catch (_) {
+          rethrow;
+        }
+        break;
+
+      default:
+        try {
+          results = await _conn
+              .query(orderBetween, [formattedBeginDate, formattedEndDate]);
+        } catch (_) {
+          rethrow;
+        }
     }
     results
         .map(
@@ -133,7 +202,29 @@ class OrderRepository {
     await _conn.close();
   }
 
-  Future<void> initialize() async {
-    await Mysql.instance.createConnection();
+  Future<void> updateStatusToScanned(Order order, String assigner) async {
+    try {
+      await _conn.query(updateAssigner, [
+        assigner,
+        order.orderNo,
+      ]);
+    } catch (_) {
+      rethrow;
+    }
   }
+
+  Future<void> updateStatusToShipped(Order order) async {
+    try {
+      await _conn.query(updateShippedDate, [
+        DateTime.now().toUtc(),
+        order.orderNo,
+      ]);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  // Future<void> initialize() async {
+  //   await Mysql.instance.createConnection();
+  // }
 }

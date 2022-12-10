@@ -48,6 +48,8 @@ dependencies:
   google_fonts: ^2.1.0
   dropdown_button2: ^1.9.0
   font_awesome_flutter: ^10.2.1
+  circular_profile_avatar: ^2.0.5
+  printing: ^5.9.3
 
 
 

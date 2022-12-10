@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:perixx_outbound/Data/login/auth_exceptions.dart';
 import 'package:perixx_outbound/Domain/login/auth_user.dart';
-import 'package:perixx_outbound/firebase_options.dart';
 
-class FirebaseAuthRepository {
+class AuthRepository {
+  static final AuthRepository instance = AuthRepository._internal();
+  AuthRepository._internal();
+  final FirebaseAuth _firestore = FirebaseAuth.instance;
+
   AuthUser? get currentUser {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _firestore.currentUser;
     if (user != null) {
       if (user.displayName == null) {
         _updateUserName(user);
@@ -15,6 +16,14 @@ class FirebaseAuthRepository {
     } else {
       return null;
     }
+  }
+
+  Stream<AuthUser?> changeUser() {
+    return _firestore
+        .userChanges()
+        .map(
+            (user) => AuthUser(email: user?.email, userName: user?.displayName))
+        .asBroadcastStream();
   }
 
   Future<AuthUser> logIn({
@@ -28,21 +37,24 @@ class FirebaseAuthRepository {
       );
       final user = currentUser;
       return user!;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        throw UserNotFoundAuthException();
-      } else if (e.code == "wrong-password") {
-        throw WrongPasswordAuthException();
-      } else {
-        throw GenericAuthException();
-      }
     } catch (_) {
-      throw GenericAuthException();
+      rethrow;
     }
+    // } on FirebaseAuthException catch (e) {
+    //   if (e.code == "user-not-found") {
+    //     throw UserNotFoundAuthException();
+    //   } else if (e.code == "wrong-password") {
+    //     throw WrongPasswordAuthException();
+    //   } else {
+    //     throw GenericAuthException();
+    //   }
+    // } catch (_) {
+    //   throw GenericAuthException();
+    // }
   }
 
   Future<void> logOut() async {
-    FirebaseAuth.instance.signOut();
+    _firestore.signOut();
   }
 
   Future<void> _updateUserName(User user) async {
@@ -50,9 +62,9 @@ class FirebaseAuthRepository {
     await user.updateDisplayName(userName);
   }
 
-  Future<void> initialize() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
+  // Future<void> initialize() async {
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  // }
 }

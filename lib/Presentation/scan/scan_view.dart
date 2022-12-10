@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:perixx_outbound/Application/login/auth_service.dart';
+import 'package:perixx_outbound/Application/login/auth_controller.dart';
+import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
+import 'package:perixx_outbound/Domain/orderlist/article.dart';
+import 'package:perixx_outbound/Presentation/shared_widgets.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
-import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
+import 'package:perixx_outbound/Presentation/utilities/snackbars/snackbar.dart';
 
 class ScanView extends StatefulWidget {
   const ScanView({super.key});
@@ -15,10 +18,11 @@ class ScanView extends StatefulWidget {
 }
 
 class _ScanViewState extends State<ScanView> {
-  String get _userName => AuthService.firebase().currentUser!.userName!;
-  final TextEditingController _textController = TextEditingController();
-  List<String> eanList = [];
-
+  final authController = Get.find<AuthController>();
+  final orderController = Get.find<OrderController>();
+  final _eanController = TextEditingController();
+  final _eanList = <String>[];
+  bool _showOrders = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
@@ -65,197 +69,410 @@ class _ScanViewState extends State<ScanView> {
     //       }
     //     });
     return Scaffold(
-      appBar: _showAppBar(),
-      body: Column(
-        children: <Widget>[
-          _showScanFilter(),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: eanList.map((ean) {
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      width: 150,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.lightBlueAccent,
-                          width: 2,
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(40),
-                        ),
-                      ),
-                      child: Text(ean),
-                    ),
-                    Positioned(
-                      right: 9,
-                      top: 9,
-                      child: SizedBox(
-                        width: 28,
-                        height: 28,
-                        child: FloatingActionButton(
-                          child: const Icon(
-                            Icons.highlight_remove,
-                          ),
-                          onPressed: () => setState(() {
-                            eanList.remove(ean);
-                          }),
-                        ),
-                      ),
-                    ),
-                    // child: Container(
-                    //   padding: const EdgeInsets.all(2),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.red,
-                    //     borderRadius: BorderRadius.circular(6),
-                    //   ),
-                    //   constraints: const BoxConstraints(
-                    //     minWidth: 20,
-                    //     minHeight: 20,
-                    //   ),
-                    //   child: const Text(
-                    //     '1',
-                    //     style: TextStyle(
-                    //       color: Colors.white,
-                    //       fontSize: 8,
-                    //     ),
-                    //     textAlign: TextAlign.center,
-                    //   ),
-                    // ),
-                  ],
-                );
-              }).toList(),
-            ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          showAppBar(
+            context,
+            _showScanEditor(),
           ),
+          _showOrderToHandle(),
+
+          // SliverToBoxAdapter(
+          //   child: Row(
+          //     children: <Widget>[
+          //       TextField(
+          //         autofocus: true,
+          //         controller: _eanController,
+          //         decoration: const InputDecoration(
+          //           icon: FaIcon(
+          //             FontAwesomeIcons.searchengin,
+          //             size: 50,
+          //           ),
+          //         ),
+          //         style: GoogleFonts.notoSans(
+          //           fontSize: 40,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //         textAlign: TextAlign.center,
+          //         onChanged: (value) {
+          //           setState(() {
+          //             scanController.scannedEan.value = value;
+          //           });
+          //         },
+          //       ),
+          //       const SizedBox(
+          //         height: 50,
+          //       ),
+          //       TextButton(
+          //         onPressed: () {
+          //           scanController.addEan(scanController.scannedEan.value);
+          //         },
+          //         child: const Text('ENTER'),
+          //       ),
+          //       const SizedBox(
+          //         height: 50,
+          //       ),
+          //       Expanded(
+          //         child: SizedBox(
+          //           width: 800,
+          //           child: Obx(
+          //             () => ListView.builder(
+          //               scrollDirection: Axis.horizontal,
+          //               itemCount: scanController.eanList.length,
+          //               itemBuilder: (context, index) {
+          //                 return Container(
+          //                   decoration: BoxDecoration(
+          //                     border: Border.all(
+          //                       color: Colors.blue,
+          //                     ),
+          //                     borderRadius: BorderRadius.circular(10.0),
+          //                   ),
+          //                   child: Text(
+          //                     '${scanController.eanList[index]} ',
+          //                     style: GoogleFonts.notoSans(
+          //                       fontSize: 30,
+          //                       fontWeight: FontWeight.w500,
+          //                     ),
+          //                   ),
+          //                 );
+          //               },
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  AppBar _showAppBar() {
-    return AppBar(
-      toolbarHeight: SizeConfig.safeVertical * 0.085,
-      leading: Padding(
-        padding: const EdgeInsets.fromLTRB(50, 20, 10, 10),
-        child: IconButton(
-          icon: const FaIcon(FontAwesomeIcons.bars),
-          iconSize: 65,
-          tooltip: 'Menu',
-          onPressed: () {},
+  Widget _showScanEditor() {
+    return Card(
+      elevation: 40,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
         ),
-      ), //IconButton
-      actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(80, 20, 70, 10),
-          child: Row(
-            children: <Widget>[
-              IconButton(
-                icon: const FaIcon(FontAwesomeIcons.rectangleList),
-                iconSize: 65,
-                tooltip: 'Orderlist',
-                onPressed: () {
-                  Get.offNamed('/ORDERLIST');
-                },
-              ), //IconButton
-              SizedBox(
-                width: SizeConfig.safeHorizontal * 0.03,
-              ),
-              IconButton(
-                icon: const FaIcon(FontAwesomeIcons.arrowRightFromBracket),
-                iconSize: 65,
-                tooltip: 'Logout',
-                onPressed: () async {
-                  final shouldLogout = await showLogOutDialog(
-                    context,
-                    _userName,
-                  );
-                  if (shouldLogout) {
-                    await AuthService.firebase().logOut();
-                    Get.offAllNamed('/LOGIN');
-                  }
-                },
-              ), //IconButto
-            ],
-          ),
-        )
-      ],
-      iconTheme: const IconThemeData(color: Color.fromARGB(255, 247, 247, 247)),
-
-      flexibleSpace: FlexibleSpaceBar(
-        background: Image.asset(
-          'assets/perixxappbar.jpg',
-          fit: BoxFit.fill,
+        side: BorderSide(
+          color: Color.fromARGB(255, 34, 34, 34),
         ),
       ),
-      //FlexibleSpaceBar
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(
-          SizeConfig.safeVertical * 0.17,
-        ),
-        child: Container(
-          width: double.maxFinite,
-          height: SizeConfig.safeVertical * 0.052,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 15,
-                spreadRadius: 5,
+      // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        // child: SizedBox(
+        //   width: 500,
+        //   child: Row(
+        //     children: <Widget>[
+        //       TextField(
+        //         autofocus: true,
+        //         controller: _eanController,
+        //         decoration: const InputDecoration(
+        //           icon: FaIcon(
+        //             FontAwesomeIcons.searchengin,
+        //             size: 50,
+        //           ),
+        //         ),
+        //         style: GoogleFonts.notoSans(
+        //           fontSize: 40,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //         textAlign: TextAlign.center,
+        //       ),
+        //       const SizedBox(
+        //         width: 50,
+        //       ),
+        //       TextButton(
+        //         onPressed: () {
+        //           if (_eanController.text.isNotEmpty) {
+        //             scanController.addEan(_eanController.text);
+        //             _eanController.text = "";
+        //           }
+        //         },
+        //         child: Text(
+        //           'ENTER',
+        //           style: GoogleFonts.notoSans(
+        //             fontSize: 40,
+        //             fontWeight: FontWeight.w500,
+        //           ),
+        //         ),
+        //       ),
+        //       const SizedBox(
+        //         height: 50,
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        child: SizedBox(
+          height: 500,
+          child: Column(
+            children: <Widget>[
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 500,
+                      // child: TextField(
+                      //   autofocus: true,
+                      //   controller: _eanController,
+                      //   decoration: const InputDecoration(
+                      //     icon: FaIcon(
+                      //       FontAwesomeIcons.searchengin,
+                      //       size: 50,
+                      //     ),
+                      //   ),
+                      //   style: GoogleFonts.notoSans(
+                      //     fontSize: 40,
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      //   textAlign: TextAlign.center,
+                      // ),
+                      child: RawKeyboardListener(
+                        autofocus: true,
+                        focusNode: FocusNode(onKey: (node, event) {
+                          if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                            return KeyEventResult
+                                .handled; // prevent passing the event into the TextField
+                          }
+                          return KeyEventResult
+                              .ignored; // pass the event to the TextField
+                        }),
+                        onKey: (event) async {
+                          if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                            setState(() {
+                              if (orderController
+                                      .getArticleByEan(_eanController.text) !=
+                                  null) {
+                                _eanList.add(_eanController.text);
+                              } else {
+                                openSnackbar(
+                                  title: 'warning'.tr,
+                                  message: 'no_article_found'.tr,
+                                );
+                              }
+                              _eanController.clear();
+                            });
+                            await orderController
+                                .getOrderExactSameEan(_eanList);
+                            if (orderController.orderList.isNotEmpty) {
+                              final selectedOrder =
+                                  orderController.orderList[0];
+                              Get.toNamed("/PRINT",
+                                  arguments: {"order": selectedOrder});
+                              _eanList.clear();
+                              orderController.updateStatusToScanned(
+                                  order: selectedOrder,
+                                  assigner:
+                                      authController.currentUser!.userName!);
+                            } else {
+                              await orderController
+                                  .getProcessingOrderByEan(_eanList);
+                              setState(() {
+                                _showOrders = true;
+                              });
+                            }
+                          }
+                        },
+                        child: TextField(
+                          controller: _eanController,
+                          decoration: const InputDecoration(
+                            icon: FaIcon(
+                              FontAwesomeIcons.searchengin,
+                              size: 50,
+                            ),
+                          ),
+                          style: GoogleFonts.notoSans(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                          // onChanged: (value) {
+                          //   setState(() {
+                          //     _scannedEan = value;
+                          //     _textController.clear();
+                          //   });
+                          // },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    // TextButton(
+                    //   onPressed: () => setState(() {
+                    //     _eanList.add(_eanController.text);
+                    //     _eanController.text = "";
+                    //     debugPrint(_eanList.length.toString());
+                    //   }),
+                    //   child: Text(
+                    //     'ENTER',
+                    //     style: GoogleFonts.notoSans(
+                    //       fontSize: 40,
+                    //       fontWeight: FontWeight.w500,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
+              const SizedBox(
+                height: 50,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _eanList.map((ean) {
+                    return Stack(
+                      children: <Widget>[
+                        if (orderController.getArticleByEan(ean) != null) ...[
+                          _showArticle(orderController.getArticleByEan(ean)!),
+                        ] else ...[
+                          Text(ean),
+                        ],
+
+                        Positioned(
+                          right: 4,
+                          top: 9,
+                          child: SizedBox(
+                            width: 28,
+                            height: 28,
+                            child: FloatingActionButton(
+                              child: const Icon(
+                                Icons.highlight_remove,
+                              ),
+                              onPressed: () => setState(() {
+                                _eanList.remove(ean);
+                              }),
+                            ),
+                          ),
+                        ),
+                        // child: Container(
+                        //   padding: const EdgeInsets.all(2),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.red,
+                        //     borderRadius: BorderRadius.circular(6),
+                        //   ),
+                        //   constraints: const BoxConstraints(
+                        //     minWidth: 20,
+                        //     minHeight: 20,
+                        //   ),
+                        //   child: const Text(
+                        //     '1',
+                        //     style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontSize: 8,
+                        //     ),
+                        //     textAlign: TextAlign.center,
+                        //   ),
+                        // ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+
+              // if (_eanList.isNotEmpty) ...[
+              //   // Obx(() {
+              //   //   debugPrint(scanController.eanList.length.toString());
+              //   //   debugPrint(orderController
+              //   //       .getArticleByEan(scanController.eanList.last)
+              //   //       .toString());
+              //   //   return _showArticle(orderController
+              //   //       .getArticleByEan(scanController.eanList.last));
+              //   // }),
+              //   SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       children: _eanList
+              //           .map((ean) =>
+              //               _showArticle(orderController.getArticleByEan(ean)))
+              //           .toList(),
+              //     ),
+              //   ),
+              // ],
             ],
-          ),
-          child: const Center(
-            child: Text(
-              'Scan',
-              style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
-                  color: Color.fromARGB(221, 89, 89, 89)),
-            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _showScanFilter() {
-    return GestureDetector(
+  Widget _showArticle(Article article) {
+    return Card(
+      elevation: 40,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
+        side: BorderSide(
+          color: Color.fromARGB(255, 122, 122, 122),
+        ),
+      ),
+      margin: const EdgeInsets.fromLTRB(5, 5, 10, 5),
       child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: TextField(
-          controller: _textController,
-          maxLines: 1,
-          autofocus: true,
-          cursorColor: Colors.black,
-          style: GoogleFonts.notoSans(
-            fontSize: 40,
-            fontWeight: FontWeight.w400,
-            color: const Color.fromARGB(255, 131, 131, 131),
-          ),
-          onSubmitted: (value) {
-            eanList.add(value);
-            value = '';
-          },
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(10),
-            // filled: true,
-            // fillColor: Colors.blueAccent,
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(
-                width: 20,
-                color: Colors.lightBlueAccent,
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 40.0,
+              backgroundImage: NetworkImage(article.image),
+              backgroundColor: Colors.transparent,
+            ),
+            Text(
+              article.articleNo,
+              style: GoogleFonts.notoSans(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
               ),
-              borderRadius: BorderRadius.circular(50),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showOrderToHandle() {
+    if (_eanList.isNotEmpty) {
+      if (_showOrders) {
+        return Obx(
+          () => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => SizedBox(
+                height: SizeConfig.safeVertical,
+                child: Column(
+                  children: orderController.orderList.asMap().entries.map((e) {
+                    return showOrder(
+                        context,
+                        const Color.fromARGB(255, 255, 254, 254),
+                        e.key,
+                        e.value);
+                  }).toList(),
+                ),
+              ),
+              childCount: orderController.orderList.length,
+            ),
+          ),
+        );
+      }
+    }
+
+    return SliverToBoxAdapter(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: SizeConfig.safeVertical * 0.18),
+          child: Text(
+            'no_result'.tr,
+            style: GoogleFonts.notoSans(
+              fontSize: 100,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),

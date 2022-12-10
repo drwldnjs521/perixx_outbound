@@ -16,6 +16,10 @@ class Languages extends Translations {
           'process_failed': 'Failed to process',
           'no_result': 'Not Found',
           'no_database_connection': 'Database Connection failed',
+          'no_article_found': 'Please scan a valid article',
+          'warning': 'Waring!',
+          'duplicate_exception':
+              'The data is already saved in the perixx system',
         },
         'ge_GE': {
           'greeting': 'Hallo',
@@ -32,6 +36,10 @@ class Languages extends Translations {
           'process_failed': 'Bearbeitung fehlgeschlagen',
           'no_result': 'Nichts gefunden',
           'no_database_connection': 'Datenbankverbindung fehlgeschlagen',
+          'no_article_found': 'Bitte einen gültigen Artikel scannen',
+          'warning': 'Achtung!',
+          'duplicate_exception':
+              'Die Daten sind bereits im perixx-System gespeichert',
         }
       };
 }

@@ -1,5 +1,10 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:perixx_outbound/Domain/orderlist/order.dart';
+
+enum Status {
+  processing,
+  scanned,
+  shipped,
+}
 
 final List<DropDownItem> menus = [
   const DropDownItem(

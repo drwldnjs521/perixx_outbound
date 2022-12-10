@@ -1,17 +1,18 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:mysql1/mysql1.dart';
 
-class Mysql {
+class Mysql extends GetxController {
   // Singleton pattern
-  static final Mysql _mySql = Mysql._internal();
-
-  factory Mysql() {
-    return _mySql;
-  }
-
+  //Possible to create only one Mysql instance only through Mysql.instance
+  static final Mysql instance = Mysql._internal();
   Mysql._internal();
 
-  static Mysql get instance => _mySql;
+  // static final Mysql _mySql = Mysql._internal();
+
+  // factory Mysql() => _mySql;
+
+  // static Mysql get instance => _mySql;
 
   static late MySqlConnection _connection;
 
