@@ -127,17 +127,17 @@ class _OrderViewState extends State<OrderView> {
                   ),
                 )
               : (_orderController.orderList.isNotEmpty)
-                  ? Obx(() => SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) => SizedBox(
-                            height: SizeConfig.safeVertical,
-                            child: OrderListView(
-                              orders: _orderController.orderList,
-                            ),
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => SizedBox(
+                          height: SizeConfig.safeVertical,
+                          child: OrderListView(
+                            orders: _orderController.orderList,
                           ),
-                          childCount: _orderController.orderList.length,
                         ),
-                      ))
+                        childCount: _orderController.orderList.length,
+                      ),
+                    )
                   : SliverToBoxAdapter(
                       child: Center(
                         child: Padding(
@@ -153,7 +153,7 @@ class _OrderViewState extends State<OrderView> {
                         ),
                       ),
                     ),
-        )
+        ),
         // orderController.pageState.value == AppState.loading
         //     ? const SliverToBoxAdapter(
         //         child: Center(child: CircularProgressIndicator()))
@@ -300,14 +300,12 @@ class _OrderViewState extends State<OrderView> {
                 ),
               ),
               onHorizontalDragUpdate: (details) async {
-                await _orderController.getOrderBetweenByStatus(
-                    start: _startDate, end: _endDate, status: _status);
                 if (details.delta.direction >= 0) {
                   if (_orderController.orderList.isNotEmpty) {
-                    for (var order in _orderController.orderList) {
-                      await _orderController.updateStatusToShipped(
-                          order: order);
-                    }
+                    await _orderController.updateStatusToShipped(
+                        orderList: _orderController.orderList);
+                    await _orderController.getOrderBetweenByStatus(
+                        start: _startDate, end: _endDate, status: _status);
                   }
                 }
               },

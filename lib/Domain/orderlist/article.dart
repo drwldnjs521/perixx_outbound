@@ -29,8 +29,11 @@ class Article {
       'Article, ID = $id, Article No. = $articleNo, model = $model';
 
   @override
-  bool operator ==(covariant Article other) => id == other.id;
+  bool operator ==(covariant Article other) => articleNo == other.articleNo;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+        id,
+        articleNo,
+      );
 }

@@ -11,8 +11,9 @@ WHERE reference_no = ?
 ''';
 
 const allArticles = '''
-SELECT id, article_no, EAN, model, path From article
-WHERE STATUS = 'STD'
+SELECT id, article_no, EAN, model, path 
+From article
+WHERE STATUS != 'EOL'
 ''';
 
 const allOrder = '''

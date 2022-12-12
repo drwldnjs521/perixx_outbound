@@ -24,3 +24,24 @@ class Item {
         qty,
       );
 }
+
+extension ItemList on List<Item> {
+  void addItem(Item newItem) {
+    if (isNotEmpty) {
+      int newQty = 0;
+      try {
+        Item oldItem = firstWhere((item) => item.article == newItem.article);
+        int index = indexOf(oldItem);
+        newQty = oldItem.qty + newItem.qty;
+        this[index] = Item(
+          article: oldItem.article,
+          qty: newQty,
+        );
+      } catch (e) {
+        add(newItem);
+      }
+    } else {
+      add(newItem);
+    }
+  }
+}

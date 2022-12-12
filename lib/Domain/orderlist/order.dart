@@ -69,28 +69,55 @@ class Order {
   @override
   int get hashCode => orderNo.hashCode;
 
-  bool containExactlySameArticle(List<String> eans) {
+  bool containExactlySameItems(List<Item> itemList) {
     return items.every((item) {
       if (item.article.articleNo == "19999") {
         return true;
       }
-      return eans.contains(item.article.ean);
+      return itemList.contains(item);
     });
   }
 
-  bool containAllArticle(List<String> eans) {
-    return eans.every((ean) => _getEans().contains(ean));
+  bool containExactlySameArticle(List<String> eanList) {
+    return items.every((item) {
+      if (item.article.articleNo == "19999") {
+        return true;
+      }
+      return eanList.contains(item.article.ean);
+    });
+  }
+
+  // bool containAllArticle(List<Item> itemList) {
+  //   // return itemList.every((item) => _getArticles().contains(item.article));
+  //   return itemList.every((item) {
+  //     return _getArticles().contains(item.article);
+  //   });
+  // }
+
+  bool containAllArticle(List<String> eanList) {
+    // return itemList.every((item) => _getArticles().contains(item.article));
+    return eanList.every((item) {
+      return _getEans().contains(item);
+    });
+  }
+
+  // bool containAllItems(List<Item> itemList) {
+  //   return itemList.every((item) => _getItems().contains(item));
+  // }
+
+  List<Article> _getArticles() {
+    return items.map((item) => item.article).toList();
   }
 
   List<String> _getEans() {
     return items.map((item) => item.article.ean).toList();
+    // return items.toList();
   }
 
   Order copyWith({
-    required String? assigner,
-    required DateTime? shippedDate,
+    String? assigner,
+    DateTime? shippedDate,
   }) {
-    // Status status = Status.values.byName(condition);
     return Order(
       createdDate: createdDate,
       orderNo: orderNo,
@@ -98,9 +125,8 @@ class Order {
       labelNo: labelNo,
       shippedTo: shippedTo,
       cn23: cn23,
-      // status: status,
-      assigner: assigner,
-      shippedDate: shippedDate,
+      assigner: assigner ?? this.assigner,
+      shippedDate: shippedDate ?? this.shippedDate,
     );
   }
 }
