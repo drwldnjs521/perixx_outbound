@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:perixx_outbound/Application/app_state.dart';
 import 'package:perixx_outbound/Application/login/auth_controller.dart';
 import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
-import 'package:perixx_outbound/Domain/orderlist/article.dart';
+import 'package:perixx_outbound/Domain/orderlist/item.dart';
 import 'package:perixx_outbound/Presentation/shared_widgets.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
 import 'package:perixx_outbound/Presentation/utilities/snackbars/snackbar.dart';
@@ -22,8 +22,8 @@ class _ScanViewState extends State<ScanView> {
   final _authController = Get.find<AuthController>();
   final _orderController = Get.find<OrderController>();
   final _eanController = TextEditingController();
-  // final _itemList = <Item>[];
-  final _eanList = <String>[];
+  final _itemList = <Item>[];
+  //final _eanList = <String>[];
   bool _showOrders = false;
   bool _hasProperOrder = true;
   @override
@@ -79,7 +79,7 @@ class _ScanViewState extends State<ScanView> {
             "SCAN",
           ),
           _showScanEditor(),
-          if (_eanList.isNotEmpty && !_hasProperOrder) ...[
+          if (_itemList.isNotEmpty && !_hasProperOrder) ...[
             _showOrderToHandle(),
           ],
 
@@ -259,13 +259,12 @@ class _ScanViewState extends State<ScanView> {
                                   final article = _orderController
                                       .getArticleByEan(_eanController.text);
                                   if (article != null) {
-                                    // _itemList.addItem(
-                                    //   Item(
-                                    //     article: article,
-                                    //     qty: 1,
-                                    //   ),
-                                    // );
-                                    _eanList.add(_eanController.text);
+                                    _itemList.addItem(
+                                      Item(
+                                        article: article,
+                                        qty: 1,
+                                      ),
+                                    );
                                   } else {
                                     openSnackbar(
                                       title: 'warning'.tr,
@@ -274,8 +273,10 @@ class _ScanViewState extends State<ScanView> {
                                   }
                                   _eanController.clear();
                                 });
+                                // await _orderController
+                                //     .getOrderExactSameArticles(_eanList);
                                 await _orderController
-                                    .getOrderExactSameArticles(_eanList);
+                                    .getOrderExactSameItems(_itemList);
                                 if (_orderController.orderList.isNotEmpty) {
                                   setState(() {
                                     _hasProperOrder = true;
@@ -284,7 +285,7 @@ class _ScanViewState extends State<ScanView> {
                                       _orderController.orderList[0];
                                   Get.toNamed("/PRINT",
                                       arguments: {"order": selectedOrder});
-                                  _eanList.clear();
+                                  _itemList.clear();
                                   _orderController.updateStatusToScanned(
                                       order: selectedOrder,
                                       assigner: _authController
@@ -293,8 +294,10 @@ class _ScanViewState extends State<ScanView> {
                                   setState(() {
                                     _hasProperOrder = false;
                                   });
+                                  // await _orderController
+                                  //     .getProcessingOrderByEan(_eanList);
                                   await _orderController
-                                      .getProcessingOrderByEan(_eanList);
+                                      .getProcessingOrderByItems(_itemList);
                                   final orders = _orderController.orderList;
                                   if (orders.isNotEmpty) {
                                     setState(() {
@@ -352,11 +355,10 @@ class _ScanViewState extends State<ScanView> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: _eanList.map((ean) {
-                        final article = _orderController.getArticleByEan(ean);
+                      children: _itemList.map((item) {
                         return Stack(
                           children: <Widget>[
-                            if (article != null) ...[_showArticle(article)],
+                            _showItem(item),
                             Positioned(
                               right: 1,
                               top: 1,
@@ -366,9 +368,10 @@ class _ScanViewState extends State<ScanView> {
                                 child: FloatingActionButton(
                                   child: const Icon(
                                     Icons.highlight_remove,
+                                    size: 30,
                                   ),
                                   onPressed: () => setState(() {
-                                    _eanList.remove(ean);
+                                    _itemList.remove(item);
                                   }),
                                 ),
                               ),
@@ -426,46 +429,7 @@ class _ScanViewState extends State<ScanView> {
     );
   }
 
-  // Widget _showItem(Article article) {
-  //   return Card(
-  //     elevation: 40,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.all(
-  //         Radius.circular(15.0),
-  //       ),
-  //       side: BorderSide(
-  //         color: Color.fromARGB(255, 122, 122, 122),
-  //       ),
-  //     ),
-  //     margin: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: <Widget>[
-  //         CircleAvatar(
-  //           radius: 60.0,
-  //           backgroundImage: NetworkImage(article.image),
-  //           backgroundColor: Colors.transparent,
-  //         ),
-  //         // Text(
-  //         //   "${item.article.articleNo} x ${item.qty}",
-  //         //   style: GoogleFonts.notoSans(
-  //         //     fontSize: 25,
-  //         //     fontWeight: FontWeight.w700,
-  //         //   ),
-  //         // ),
-  //         Text(
-  //           article.articleNo,
-  //           style: GoogleFonts.notoSans(
-  //             fontSize: 20,
-  //             fontWeight: FontWeight.w700,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  Widget _showArticle(Article article) {
+  Widget _showItem(Item item) {
     return Card(
       elevation: 40,
       shape: const RoundedRectangleBorder(
@@ -483,21 +447,33 @@ class _ScanViewState extends State<ScanView> {
         children: <Widget>[
           CircleAvatar(
             radius: 60.0,
-            backgroundImage: NetworkImage(article.image),
+            backgroundImage: NetworkImage(item.article.image),
             backgroundColor: Colors.transparent,
           ),
-          // Text(
-          //   "${item.article.articleNo} x ${item.qty}",
-          //   style: GoogleFonts.notoSans(
-          //     fontSize: 25,
-          //     fontWeight: FontWeight.w700,
-          //   ),
-          // ),
-          Text(
-            article.articleNo,
-            style: GoogleFonts.notoSans(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
+          Text.rich(
+            TextSpan(
+              text: item.article.articleNo,
+              style: GoogleFonts.notoSans(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+              children: <InlineSpan>[
+                TextSpan(
+                  text: " x ",
+                  style: GoogleFonts.notoSans(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: const Color.fromARGB(255, 252, 79, 79),
+                  ),
+                ),
+                TextSpan(
+                  text: item.qty.toString(),
+                  style: GoogleFonts.notoSans(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

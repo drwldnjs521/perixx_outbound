@@ -31,98 +31,24 @@ class OrderController extends GetxController {
     super.onClose();
   }
 
-  // List<Order> getOrderBetweenByStatus({
-  //   required String start,
-  //   required String end,
-  //   required String status,
-  // }) {
-  //   switch (status) {
-  //     case "processing":
-  //       if (start == end) {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       } else {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isBefore(_getDate(DateTime.parse(end))) &&
-  //                 _getDate(order.createdDate)
-  //                     .isAfter(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       }
-
-  //     case "scanned":
-  //       if (start == end) {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       } else {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isBefore(_getDate(DateTime.parse(end))) &&
-  //                 _getDate(order.createdDate)
-  //                     .isAfter(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       }
-
-  //     case "shipped":
-  //       if (start == end) {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       } else {
-  //         return orderList
-  //             .where((order) =>
-  //                 _getDate(order.createdDate)
-  //                     .isBefore(_getDate(DateTime.parse(end))) &&
-  //                 _getDate(order.createdDate)
-  //                     .isAfter(_getDate(DateTime.parse(start))) &&
-  //                 order.status == status)
-  //             .toList();
-  //       }
-  //     default:
-  //       if (start == end) {
-  //         return orderList
-  //             .where((element) => _getDate(element.createdDate)
-  //                 .isAtSameMomentAs(_getDate(DateTime.parse(start))))
-  //             .toList();
-  //       } else {
-  //         return orderList
-  //             .where((element) =>
-  //                 _getDate(element.createdDate)
-  //                     .isBefore(_getDate(DateTime.parse(end))) &&
-  //                 _getDate(element.createdDate)
-  //                     .isAfter(_getDate(DateTime.parse(start))))
-  //             .toList();
-  //       }
-  //   }
-  // }
-
-  Future<void> getOrderExactSameEan(List<String> eans) async {
-    pageState(AppState.loading);
-    orderList.value = await _orderRepo.getProcessingOrder();
-    pageState(AppState.loaded);
-    orderList.where((order) => order.containExactlySameArticle(eans)).isEmpty
-        ? orderList.value = []
-        : orderList.value = [
-            orderList
-                .where((order) => order.containExactlySameArticle(eans))
-                .first
-          ];
+  Article? getArticleByEan(String ean) {
+    return articleList.where((article) => article.ean == ean).isEmpty
+        ? null
+        : articleList.where((article) => article.ean == ean).first;
   }
+
+  // Future<void> getOrderExactSameEan(List<String> eans) async {
+  //   pageState(AppState.loading);
+  //   orderList.value = await _orderRepo.getProcessingOrder();
+  //   pageState(AppState.loaded);
+  //   orderList.where((order) => order.containExactlySameArticle(eans)).isEmpty
+  //       ? orderList.value = []
+  //       : orderList.value = [
+  //           orderList
+  //               .where((order) => order.containExactlySameArticle(eans))
+  //               .first
+  //         ];
+  // }
 
   Future<void> getTodayOrder() async {
     pageState(AppState.loading);
@@ -161,110 +87,26 @@ class OrderController extends GetxController {
     }
 
     pageState(AppState.loaded);
-    // switch (status) {
-    //   case "processing":
-    //  orderList.value = await _orderRepo.getOrderBetweenByStatus(
-    //           begin: start, end: end, status: status);
-    //       break;
-
-    //     }
-    //   selectedOrders.value = orderList
-    //       .where((order) =>
-    //           _getDate(order.createdDate)
-    //               .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-    //           order.status == status)
-    //       .toList();
-    //   break;
-    // } else {
-    //   selectedOrders.value = orderList
-    //       .where((order) =>
-    //           _getDate(order.createdDate)
-    //               .isBefore(_getDate(DateTime.parse(end))) &&
-    //           _getDate(order.createdDate)
-    //               .isAfter(_getDate(DateTime.parse(start))) &&
-    //           order.status == status)
-    //       .toList();
-    //   break;
-    // }
-
-    // case "scanned":
-    // if (start == end) {
-    //   selectedOrders.value = orderList
-    //       .where((order) =>
-    //           _getDate(order.createdDate)
-    //               .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-    //           order.status == status)
-    //       .toList();
-    //   break;
-    // } else {
-    //   selectedOrders.value = orderList
-    //       .where((order) =>
-    //           _getDate(order.createdDate)
-    //               .isBefore(_getDate(DateTime.parse(end))) &&
-    //           _getDate(order.createdDate)
-    //               .isAfter(_getDate(DateTime.parse(start))) &&
-    //           order.status == status)
-    //       .toList();
-    //   break;
-    // }
-    //   orderList.value = await _orderRepo.getOrderBetweenByStatus(
-    //         begin: start, end: end, status: status);
-    //     break;
-
-    // case "shipped":
-    //   if (start == end) {
-    //     selectedOrders.value = orderList
-    //         .where((order) =>
-    //             _getDate(order.createdDate)
-    //                 .isAtSameMomentAs(_getDate(DateTime.parse(start))) &&
-    //             order.status == status)
-    //         .toList();
-    //     break;
-    //   } else {
-    //     selectedOrders.value = orderList
-    //         .where((order) =>
-    //             _getDate(order.createdDate)
-    //                 .isBefore(_getDate(DateTime.parse(end))) &&
-    //             _getDate(order.createdDate)
-    //                 .isAfter(_getDate(DateTime.parse(start))) &&
-    //             order.status == status)
-    //         .toList();
-    //     break;
-    //   }
-    // default:
-    //   if (start == end) {
-    //     selectedOrders.value = orderList
-    //         .where((element) => _getDate(element.createdDate)
-    //             .isAtSameMomentAs(_getDate(DateTime.parse(start))))
-    //         .toList();
-    //     break;
-    //   } else {
-    //     selectedOrders.value = orderList
-    //         .where((element) =>
-    //             _getDate(element.createdDate)
-    //                 .isBefore(_getDate(DateTime.parse(end))) &&
-    //             _getDate(element.createdDate)
-    //                 .isAfter(_getDate(DateTime.parse(start))))
-    //         .toList();
-    //     break;
-    //   }
-    // }
   }
 
-  Article? getArticleByEan(String ean) {
-    return articleList.where((article) => article.ean == ean).isEmpty
-        ? null
-        : articleList.where((article) => article.ean == ean).first;
-  }
+  // Article? getArticleByEan(String ean) {
+  //   return articleList.where((article) => article.ean == ean).isEmpty
+  //       ? null
+  //       : articleList.where((article) => article.ean == ean).first;
+  // }
 
-  Future<void> getProcessingOrderByEan(List<String> eans) async {
+  Future<void> getProcessingOrderByItems(List<Item> itemList) async {
     pageState(AppState.loading);
     orderList.value = await _orderRepo.getProcessingOrder();
     pageState(AppState.loaded);
-    orderList.where((order) => order.containAllArticle(eans)).toList().isEmpty
+    orderList
+            .where((order) => order.containAllArticle(itemList))
+            .toList()
+            .isEmpty
         ? orderList.value = []
-        : orderList.value =
-            orderList.where((order) => order.containAllArticle(eans)).toList();
+        : orderList.value = orderList
+            .where((order) => order.containAllArticle(itemList))
+            .toList();
   }
 
   // Future<void> getProcessingOrderByItems(List<Item> itemList) async {
@@ -332,37 +174,6 @@ class OrderController extends GetxController {
         : orderList.value = [
             orderList
                 .where((order) => order.containExactlySameItems(itemList))
-                .first
-          ];
-  }
-
-  Future<void> getOrderExactSameArticles(List<String> eanList) async {
-    pageState(AppState.loading);
-    try {
-      orderList.value = await _orderRepo.getProcessingOrder();
-    } on MySqlException catch (e) {
-      if (e.errorNumber == 1062) {
-        throw DuplicateException();
-      } else {
-        throw MySqlCustomException(e.message);
-      }
-    } catch (e) {
-      throw MySqlCustomException(e.toString());
-    }
-
-    pageState(AppState.loaded);
-    // orderList.where((order) => order.containExactlySameArticle(eans)).isEmpty
-    //     ? orderList.value = []
-    //     : orderList.value = [
-    //         orderList
-    //             .where((order) => order.containExactlySameArticle(eans))
-    //             .first
-    //       ];
-    orderList.where((order) => order.containExactlySameArticle(eanList)).isEmpty
-        ? orderList.value = []
-        : orderList.value = [
-            orderList
-                .where((order) => order.containExactlySameArticle(eanList))
                 .first
           ];
   }

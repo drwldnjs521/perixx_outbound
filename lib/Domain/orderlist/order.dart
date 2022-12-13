@@ -78,26 +78,9 @@ class Order {
     });
   }
 
-  bool containExactlySameArticle(List<String> eanList) {
-    return items.every((item) {
-      if (item.article.articleNo == "19999") {
-        return true;
-      }
-      return eanList.contains(item.article.ean);
-    });
-  }
-
-  // bool containAllArticle(List<Item> itemList) {
-  //   // return itemList.every((item) => _getArticles().contains(item.article));
-  //   return itemList.every((item) {
-  //     return _getArticles().contains(item.article);
-  //   });
-  // }
-
-  bool containAllArticle(List<String> eanList) {
-    // return itemList.every((item) => _getArticles().contains(item.article));
-    return eanList.every((item) {
-      return _getEans().contains(item);
+  bool containAllArticle(List<Item> itemList) {
+    return itemList.every((item) {
+      return _getArticles().contains(item.article);
     });
   }
 
@@ -107,11 +90,6 @@ class Order {
 
   List<Article> _getArticles() {
     return items.map((item) => item.article).toList();
-  }
-
-  List<String> _getEans() {
-    return items.map((item) => item.article.ean).toList();
-    // return items.toList();
   }
 
   Order copyWith({
