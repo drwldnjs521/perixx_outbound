@@ -178,19 +178,19 @@ class _OrderViewState extends State<OrderView> {
                   child: Center(
                     child: RichText(
                       text: TextSpan(
-                        text: "Please swipe to ship the orders",
+                        text: 'swipe'.tr,
                         style: GoogleFonts.notoSans(
                           fontSize: SizeConfig.safeHorizontal * 0.05,
                           fontWeight: FontWeight.w500,
-                          color: const Color.fromARGB(255, 168, 168, 168),
+                          color: const Color.fromARGB(255, 230, 228, 228),
                         ),
                         children: [
                           TextSpan(
                             text: "    >>>",
                             style: GoogleFonts.notoSans(
                               fontSize: SizeConfig.safeHorizontal * 0.05,
-                              fontWeight: FontWeight.w500,
-                              color: const Color.fromARGB(255, 210, 210, 210),
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromARGB(205, 227, 0, 204),
                             ),
                           ),
                         ],

@@ -21,6 +21,7 @@ class Languages extends Translations {
           'duplicate_exception':
               'The data is already saved in the perixx system',
           'not_valid_ean': 'Please scan a valid article',
+          'swipe': 'Please swipe to ship the orders',
         },
         'ge_GE': {
           'greeting': 'Hallo',
@@ -42,6 +43,7 @@ class Languages extends Translations {
           'duplicate_exception':
               'Die Daten sind bereits im perixx-System gespeichert',
           'not_valid_ean': 'Bitte einen gültigen Artikel scannen',
+          'swipe': 'Bitte wischen Sie, um die Bestellungen zu schicken',
         }
       };
 }
