@@ -15,39 +15,33 @@ Future<T?> showGenericDialog<T>({
   if (options.isNotEmpty) {
     return Get.dialog(
       AlertDialog(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: SizeConfig.safeVertical * 0.4,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 100,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        titlePadding: EdgeInsets.symmetric(
+          vertical: SizeConfig.safeVertical * 0.08,
+          horizontal: SizeConfig.safeHorizontal * 0.05,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: SizeConfig.safeVertical * 0.04,
+            color: const Color.fromARGB(186, 54, 54, 54),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        contentPadding: EdgeInsets.only(
+          left: SizeConfig.safeHorizontal * 0.13,
+          right: SizeConfig.safeHorizontal * 0.13,
+          bottom: SizeConfig.safeHorizontal * 0.13,
         ),
         content: Builder(
           builder: (context) {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 140,
-                  ),
-                  Text(
-                    content,
-                    style: const TextStyle(
-                      color: Color.fromARGB(213, 53, 51, 51),
-                      fontSize: 30,
-                    ),
-                  ),
-                ],
+            return Text(
+              content,
+              style: TextStyle(
+                color: const Color.fromARGB(213, 53, 51, 51),
+                fontSize: SizeConfig.safeVertical * 0.028,
               ),
+              textAlign: TextAlign.center,
             );
           },
         ),
@@ -60,7 +54,7 @@ Future<T?> showGenericDialog<T>({
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              padding: const EdgeInsets.all(15),
+              // padding: const EdgeInsets.all(15),
             ),
             onPressed: () {
               if (value != null) {
@@ -71,60 +65,59 @@ Future<T?> showGenericDialog<T>({
             },
             child: Text(
               optionTitle,
-              style: const TextStyle(
-                fontSize: 25,
+              style: TextStyle(
+                fontSize: SizeConfig.safeVertical * 0.02,
               ),
             ),
           );
         }).toList(),
         actionsOverflowButtonSpacing: 20,
-        actionsPadding: const EdgeInsets.fromLTRB(30, 20, 30, 100),
-        actionsAlignment: MainAxisAlignment.center,
+        actionsPadding: EdgeInsets.fromLTRB(
+          SizeConfig.safeHorizontal * 0.08,
+          0,
+          SizeConfig.safeHorizontal * 0.08,
+          SizeConfig.safeHorizontal * 0.09,
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(13)),
         ),
       ),
     );
   } else {
     return Get.dialog(
       AlertDialog(
-        title: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 50,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        titlePadding: EdgeInsets.symmetric(
+          vertical: SizeConfig.safeVertical * 0.08,
+          horizontal: SizeConfig.safeHorizontal * 0.05,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: SizeConfig.safeVertical * 0.04,
+              color: const Color.fromARGB(225, 255, 23, 23)),
+          textAlign: TextAlign.center,
+        ),
+        contentPadding: EdgeInsets.only(
+          left: SizeConfig.safeHorizontal * 0.13,
+          right: SizeConfig.safeHorizontal * 0.13,
+          bottom: SizeConfig.safeHorizontal * 0.13,
         ),
         content: Builder(
           builder: (context) {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 140,
-                  ),
-                  Text(
-                    content,
-                    style: const TextStyle(
-                      color: Color.fromARGB(213, 53, 51, 51),
-                      fontSize: 30,
-                    ),
-                  ),
-                ],
+            return Text(
+              content,
+              style: TextStyle(
+                color: const Color.fromARGB(213, 53, 51, 51),
+                fontSize: SizeConfig.safeVertical * 0.028,
               ),
+              textAlign: TextAlign.center,
             );
           },
         ),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(13)),
         ),
       ),
     );
@@ -140,58 +133,50 @@ Future<T?> showGenericDialogWithUserName<T>({
 }) {
   SizeConfig.init(context);
   final options = optionsBuilder();
+
   return Get.dialog(
     AlertDialog(
-      title: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 50,
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 40,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      titlePadding: EdgeInsets.all(SizeConfig.safeHorizontal * 0.1),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: SizeConfig.safeVertical * 0.045,
+          color: const Color.fromARGB(186, 54, 54, 54),
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.only(
+        left: SizeConfig.safeHorizontal * 0.13,
+        right: SizeConfig.safeHorizontal * 0.13,
+        bottom: SizeConfig.safeHorizontal * 0.13,
       ),
       content: Builder(
         builder: (context) {
           // Get available height and width of the build area of this widget. Make a choice depending on the size.
-          return Center(
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 140,
+          return RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(
+                color: const Color.fromARGB(213, 53, 51, 51),
+                fontSize: SizeConfig.safeVertical * 0.028,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: 'greeting'.tr,
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: const TextStyle(
-                      color: Color.fromARGB(213, 53, 51, 51),
-                      fontSize: 30,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: 'greeting'.tr,
-                      ),
-                      const TextSpan(
-                        text: ', ',
-                      ),
-                      TextSpan(
-                        text: '$userName \n',
-                        style: const TextStyle(
-                          color: Color.fromARGB(164, 247, 64, 14),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextSpan(
-                        text: content,
-                      ),
-                    ],
+                const TextSpan(
+                  text: ', ',
+                ),
+                TextSpan(
+                  text: '$userName \n',
+                  style: const TextStyle(
+                    color: Color.fromARGB(164, 247, 64, 14),
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                TextSpan(
+                  text: content,
                 ),
               ],
             ),
@@ -207,30 +192,35 @@ Future<T?> showGenericDialogWithUserName<T>({
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
-            padding: const EdgeInsets.all(15),
+            // padding: EdgeInsets.all(
+            //   SizeConfig.safeHorizontal * 0.001,
+            // ),
           ),
           onPressed: () {
             if (value != null) {
-              // Navigator.of(context).pop(value);
               Get.back(result: value);
             } else {
-              // Navigator.of(context).pop();
               Get.back();
             }
           },
           child: Text(
             optionTitle,
-            style: const TextStyle(
-              fontSize: 25,
+            style: TextStyle(
+              fontSize: SizeConfig.safeVertical * 0.02,
             ),
           ),
         );
       }).toList(),
       actionsOverflowButtonSpacing: 20,
-      actionsPadding: const EdgeInsets.fromLTRB(30, 20, 30, 100),
-      actionsAlignment: MainAxisAlignment.center,
+      actionsPadding: EdgeInsets.fromLTRB(
+        SizeConfig.safeHorizontal * 0.08,
+        0,
+        SizeConfig.safeHorizontal * 0.08,
+        SizeConfig.safeHorizontal * 0.09,
+      ),
+      actionsAlignment: MainAxisAlignment.spaceEvenly,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(13)),
       ),
     ),
   );

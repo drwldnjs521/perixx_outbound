@@ -36,14 +36,11 @@ class _OrderViewState extends State<OrderView> {
         [
           DropdownMenuItem(
             value: menu,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text(
-                menu,
-                style: GoogleFonts.notoSans(
-                  fontSize: 40,
-                  color: Colors.blueGrey,
-                ),
+            child: Text(
+              menu,
+              style: GoogleFonts.notoSans(
+                fontSize: SizeConfig.safeHorizontal * 0.05,
+                color: Colors.blueGrey,
               ),
             ),
           ),
@@ -96,11 +93,11 @@ class _OrderViewState extends State<OrderView> {
     List<double> itemsHeights = [];
     for (var i = 0; i < (menus.length * 2) - 1; i++) {
       if (i.isEven) {
-        itemsHeights.add(50);
+        itemsHeights.add(SizeConfig.safeVertical * 0.05);
       }
       //Dividers indexes will be the odd indexes
       if (i.isOdd) {
-        itemsHeights.add(44);
+        itemsHeights.add(SizeConfig.safeVertical * 0.015);
       }
     }
     return itemsHeights;
@@ -110,191 +107,94 @@ class _OrderViewState extends State<OrderView> {
   Widget build(BuildContext context) {
     SizeConfig.init(context);
     return Scaffold(
-      body: CustomScrollView(slivers: <Widget>[
-        showAppBar(
-          context,
-          "In/OutBound",
-        ),
-        _showFilter(),
-        Obx(
-          () => _orderController.pageState.value == AppState.loading
-              ? SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            top: SizeConfig.safeVertical * 0.18),
-                        child: const CircularProgressIndicator()),
-                  ),
-                )
-              : (_orderController.orderList.isNotEmpty)
-                  ? SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => SizedBox(
-                          height: SizeConfig.safeVertical,
-                          child: OrderListView(
-                            orders: _orderController.orderList,
-                          ),
-                        ),
-                        childCount: _orderController.orderList.length,
-                      ),
-                    )
-                  : SliverToBoxAdapter(
-                      child: Center(
-                        child: Padding(
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          showAppBar(
+            context,
+            "In/OutBound",
+          ),
+          _showFilter(),
+          Obx(
+            () => _orderController.pageState.value == AppState.loading
+                ? SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
                           padding: EdgeInsets.only(
-                              top: SizeConfig.safeVertical * 0.3),
-                          child: Text(
-                            'no_result'.tr,
-                            style: GoogleFonts.notoSans(
-                              fontSize: 100,
-                              fontWeight: FontWeight.w500,
+                              top: SizeConfig.safeVertical * 0.22),
+                          child: const CircularProgressIndicator()),
+                    ),
+                  )
+                : (_orderController.orderList.isNotEmpty)
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final order = _orderController.orderList[index];
+                            return OrderListView(index: index, order: order);
+                          },
+                          childCount: _orderController.orderList.length,
+                        ),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: SizeConfig.safeVertical * 0.22),
+                            child: Text(
+                              'no_result'.tr,
+                              style: GoogleFonts.notoSans(
+                                fontSize: SizeConfig.safeHorizontal * 0.1,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-        ),
-        // orderController.pageState.value == AppState.loading
-        //     ? const SliverToBoxAdapter(
-        //         child: Center(child: CircularProgressIndicator()))
-        //     : (orderController.orderList.isNotEmpty)
-        //         ? Obx(() => SliverList(
-        //               delegate: SliverChildBuilderDelegate(
-        //                 (context, index) => SizedBox(
-        //                   height: SizeConfig.safeVertical,
-        //                   child: OrderListView(
-        //                     orders: orderController.orderList,
-        //                   ),
-        //                 ),
-        //                 childCount: orderController.orderList.length,
-        //               ),
-        //             ))
-        //         : SliverToBoxAdapter(
-        //             child: Center(
-        //               child: Padding(
-        //                 padding: EdgeInsets.only(
-        //                     top: SizeConfig.safeVertical * 0.18),
-        //                 child: Text(
-        //                   'no_result'.tr,
-        //                   style: GoogleFonts.notoSans(
-        //                     fontSize: 100,
-        //                     fontWeight: FontWeight.w500,
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //           )
-      ]
-
-          // Obx(() {
-          //   orderController.getOrderBetweenByStatus(
-          //       start: _startDate, end: _endDate, status: _status);
-          //   if (orderController.orderList.isNotEmpty) {
-          //     return SliverList(
-          //       delegate: SliverChildBuilderDelegate(
-          //         (context, index) => SizedBox(
-          //           height: SizeConfig.safeVertical,
-          //           child: OrderListView(
-          //             orders: orderController.orderList,
-          //           ),
-          //         ),
-          //         childCount: orderController.orderList.length,
-          //       ),
-          //     );
-          //   } else {
-          //     return SliverToBoxAdapter(
-          //       child: Center(
-          //         child: Padding(
-          //           padding:
-          //               EdgeInsets.only(top: SizeConfig.safeVertical * 0.18),
-          //           child: Text(
-          //             'no_result'.tr,
-          //             style: GoogleFonts.notoSans(
-          //               fontSize: 100,
-          //               fontWeight: FontWeight.w500,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   }
-          // })
-          // if (_status == "scanned") ...[
-          //   SliverFillRemaining(
-          //     hasScrollBody: false,
-          //     child: GestureDetector(
-          //       child: Align(
-          //         alignment: Alignment.bottomCenter,
-          //         child: Container(
-          //           width: double.infinity,
-          //           height: 100,
-          //           color: Colors.blueAccent,
-          //           child: Center(
-          //             child: RichText(
-          //               text: TextSpan(
-          //                 text: "Please swipe to ship the orders",
-          //                 style: GoogleFonts.notoSans(
-          //                   fontSize: 40,
-          //                   fontWeight: FontWeight.w500,
-          //                   color: const Color.fromARGB(255, 168, 168, 168),
-          //                 ),
-          //                 children: [
-          //                   TextSpan(
-          //                     text: "    >>>",
-          //                     style: GoogleFonts.notoSans(
-          //                       fontSize: 40,
-          //                       fontWeight: FontWeight.w500,
-          //                       color: const Color.fromARGB(255, 210, 210, 210),
-          //                     ),
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //       onHorizontalDragUpdate: (details) async {
-          //         final orders = orderController.getOrderBetweenByStatus(
-          //             _startDate, _endDate, "scanned");
-          //         if (details.delta.direction >= 0) {
-          //           if (orders.isNotEmpty) {
-          //             for (var order in orders) {
-          //               await orderController.updateStatusToShipped(
-          //                   order: order);
-          //             }
-          //           }
-          //         }
-          //       },
-          //     ),
-          //   ),
-          // ],
-
           ),
+          // SliverToBoxAdapter(
+          //   child: SizedBox(height: SizeConfig.safeVertical * 0.1),
+          // )
+        ],
+      ),
       bottomSheet: _status == "scanned"
           ? GestureDetector(
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
-                height: 100,
-                color: Colors.blueAccent,
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Please swipe to ship the orders",
-                      style: GoogleFonts.notoSans(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w500,
-                        color: const Color.fromARGB(255, 168, 168, 168),
-                      ),
-                      children: [
-                        TextSpan(
-                          text: "    >>>",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w500,
-                            color: const Color.fromARGB(255, 210, 210, 210),
-                          ),
+                height: SizeConfig.safeVertical * 0.09,
+                child: Card(
+                  margin: EdgeInsets.fromLTRB(
+                    SizeConfig.safeHorizontal * 0.02,
+                    SizeConfig.safeVertical * 0.01,
+                    SizeConfig.safeHorizontal * 0.02,
+                    SizeConfig.safeVertical * 0.01,
+                  ),
+                  color: Colors.lightBlue,
+                  elevation: 40,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Please swipe to ship the orders",
+                        style: GoogleFonts.notoSans(
+                          fontSize: SizeConfig.safeHorizontal * 0.05,
+                          fontWeight: FontWeight.w500,
+                          color: const Color.fromARGB(255, 168, 168, 168),
                         ),
-                      ],
+                        children: [
+                          TextSpan(
+                            text: "    >>>",
+                            style: GoogleFonts.notoSans(
+                              fontSize: SizeConfig.safeHorizontal * 0.05,
+                              fontWeight: FontWeight.w500,
+                              color: const Color.fromARGB(255, 210, 210, 210),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -534,17 +434,21 @@ class _OrderViewState extends State<OrderView> {
           ),
         ),
         // margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        margin: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+        margin: EdgeInsets.fromLTRB(
+          SizeConfig.safeHorizontal * 0.02,
+          SizeConfig.safeVertical * 0.01,
+          SizeConfig.safeHorizontal * 0.02,
+          SizeConfig.safeVertical * 0.01,
+        ),
 
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(SizeConfig.safeHorizontal * 0.01),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 TextButton(
-                  style: const ButtonStyle(),
                   onPressed: () async {
                     DateTimeRange? pickedRange = await showDateRangePicker(
                       context: context,
@@ -577,26 +481,26 @@ class _OrderViewState extends State<OrderView> {
                     alignment: Alignment.center,
                     height: SizeConfig.safeVertical * 0.05,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        const Icon(
+                        Icon(
                           Icons.date_range,
-                          size: 60,
+                          size: SizeConfig.safeHorizontal * 0.08,
                         ),
                         if (_startDate == _endDate) ...[
                           Text(
                             " $_startDate",
                             style: GoogleFonts.notoSans(
-                              fontSize: 40,
+                              fontSize: SizeConfig.safeHorizontal * 0.05,
                               fontWeight: FontWeight.w500,
                               color: Colors.blueGrey,
                             ),
                           ),
                         ] else ...[
                           Text(
-                            " $_startDate - $_endDate",
+                            "$_startDate - $_endDate",
                             style: GoogleFonts.notoSans(
-                              fontSize: 40,
+                              fontSize: SizeConfig.safeHorizontal * 0.03,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -605,51 +509,16 @@ class _OrderViewState extends State<OrderView> {
                     ),
                   ),
                 ),
-                // const Icon(
-                //   Icons.more_vert,
-                //   size: 70,
-                //   color: Color.fromARGB(159, 57, 57, 57),
-                // ),
                 const VerticalDivider(
                   color: Color.fromARGB(111, 68, 67, 67), //color of divider
-                  width: 10, //width space of divider
+                  width: 8, //width space of divider
                   thickness: 2, //thickness of divier line
-                  indent: 15, //Spacing at the top of divider.
-                  endIndent: 15, //Spacing at the bottom of divider.
+                  indent: 10, //Spacing at the top of divider.
+                  endIndent: 10, //Spacing at the bottom of divider.
                 ),
                 DropdownButtonHideUnderline(
                   child: DropdownButton2(
-                    // hint: Text(
-                    //   'Selected Status',
-                    //   style: GoogleFonts.notoSans(
-                    //     fontSize: 40,
-                    //     fontWeight: FontWeight.w400,
-                    //     color: Colors.blueGrey,
-                    //   ),
-                    // ),
                     value: _status,
-                    // selectedItemBuilder: (BuildContext context) => menus
-                    //     .map<Widget>((menu) => Row(
-                    //           mainAxisAlignment: MainAxisAlignment.center,
-                    //           children: <Widget>[
-                    //             Padding(
-                    //               padding: const EdgeInsets.only(left: 16.0),
-                    //               child: menu.icon,
-                    //             ),
-                    //             Padding(
-                    //               padding: const EdgeInsets.only(left: 20),
-                    //               child: Text(
-                    //                 menu.name,
-                    //                 style: GoogleFonts.notoSans(
-                    //                   fontSize: 40,
-                    //                   fontWeight: FontWeight.w400,
-                    //                   color: Colors.blueGrey,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ))
-                    //     .toList(),
                     items: _dropdownItems,
                     customItemsHeights: _customsItemsHeight,
                     onChanged: (value) async {
@@ -659,10 +528,10 @@ class _OrderViewState extends State<OrderView> {
                       await _orderController.getOrderBetweenByStatus(
                           start: _startDate, end: _endDate, status: _status);
                     },
-                    buttonHeight: 60,
-                    icon: const FaIcon(FontAwesomeIcons.sortDown),
-                    iconOnClick: const FaIcon(FontAwesomeIcons.sortUp),
-                    iconSize: 50,
+                    buttonHeight: SizeConfig.safeVertical * 0.05,
+                    icon: const FaIcon(FontAwesomeIcons.caretDown),
+                    iconOnClick: const FaIcon(FontAwesomeIcons.caretUp),
+                    iconSize: SizeConfig.safeHorizontal * 0.05,
                   ),
                 ),
               ],

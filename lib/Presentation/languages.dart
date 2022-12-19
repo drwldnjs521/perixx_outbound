@@ -10,16 +10,17 @@ class Languages extends Translations {
           'password': 'Password',
           'not_valid_password': 'Password must be at least 7 characters long!',
           'check_logout': 'Are you sure you want to log out?',
-          'error': 'An error occured!',
+          'error': 'Error!',
           'user_not_exists': 'User Not Found',
           'wrong_password': 'Wrong Password',
           'process_failed': 'Failed to process',
           'no_result': 'Not Found',
           'no_database_connection': 'Database Connection failed',
-          'no_article_found': 'Please scan a valid article',
+          'no_article_found': 'No item with the scanned barcode',
           'warning': 'Waring!',
           'duplicate_exception':
               'The data is already saved in the perixx system',
+          'not_valid_ean': 'Please scan a valid article',
         },
         'ge_GE': {
           'greeting': 'Hallo',
@@ -30,16 +31,17 @@ class Languages extends Translations {
           'not_valid_password':
               'Das Passwort muss mindestens 7 Zeichen lang sein!',
           'check_logout': 'Sind Sie sicher, dass Sie sich abmelden möchten?',
-          'error': 'Es ist ein Fehler aufgetreten!',
+          'error': 'Fehler!',
           'user_not_exists': 'Nutzer nicht gefunden',
           'wrong_password': 'Falsches Passwort',
           'process_failed': 'Bearbeitung fehlgeschlagen',
           'no_result': 'Nichts gefunden',
           'no_database_connection': 'Datenbankverbindung fehlgeschlagen',
-          'no_article_found': 'Bitte einen gültigen Artikel scannen',
+          'no_article_found': 'Kein Artikel mit dem gescannten Barcode',
           'warning': 'Achtung!',
           'duplicate_exception':
               'Die Daten sind bereits im perixx-System gespeichert',
+          'not_valid_ean': 'Bitte einen gültigen Artikel scannen',
         }
       };
 }

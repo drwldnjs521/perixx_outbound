@@ -22,6 +22,7 @@ Future<void> main() async {
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('en', 'US'),
       initialRoute: '/LOGIN',
+      // theme: CustomTheme.theme,
     ),
   );
 }
@@ -31,34 +32,3 @@ Future<void> initService() async {
   await Get.putAsync(() => InitialSettingService().init(), permanent: true);
   debugPrint("initial Service started...");
 }
-
-
-
-
-
-// runApp(GetMaterialApp(
-//     title = 'Perixx Outbound',
-//     getPages = appRoutes(),
-//     debugShowCheckedModeBanner = false,
-//     translations = Languages(),
-//     locale = Get.deviceLocale,
-//     fallbackLocale = const Locale('en', 'US'),
-//     home = FutureBuilder(
-//       future: AuthService.firebase().initialize(),
-//       builder: (context, snapshot) {
-//         switch (snapshot.connectionState) {
-//           case ConnectionState.done:
-//             final currentUser = AuthService.firebase().currentUser;
-//             if (currentUser != null) {
-//               return const OrderView();
-//             } else {
-//               return const LoginView();
-//             }
-//           default:
-//             return const Center(child: CircularProgressIndicator());
-//         }
-//       },
-//     ),
-//     initialBinding = OrderBinding(),
-//   ));
-// }
