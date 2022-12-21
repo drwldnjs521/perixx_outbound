@@ -211,7 +211,7 @@ class OrderController extends GetxController {
   }
 
   Future<void> updateStatusToShipped({required List<Order> orderList}) async {
-    pageState(AppState.loading);
+    // pageState(AppState.loading);
     for (var order in orderList) {
       final copiedOrder = order.copyWith(shippedDate: DateTime.now().toUtc());
       try {

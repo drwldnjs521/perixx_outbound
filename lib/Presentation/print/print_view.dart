@@ -121,7 +121,7 @@ class _PrintViewState extends State<PrintView> {
                 ),
                 child: orderDetails(order),
               ),
-              childCount: order.items.length,
+              childCount: 1,
             ),
           ),
           SliverList(
@@ -180,8 +180,11 @@ class _PrintViewState extends State<PrintView> {
                       child: SizedBox(
                         height: SizeConfig.safeVertical * 0.6,
                         child: FutureBuilder(
-                          future:
-                              _getDocument('$documentUrl${order.labelNo}.pdf'),
+                          future: order.labelNo == 'DEUTSCHE POST'
+                              ? _getDocument(
+                                  '${documentUrl}dp${order.orderNo}.pdf')
+                              : _getDocument(
+                                  '$documentUrl${order.labelNo}.pdf'),
                           builder: (ctx, snapshot) {
                             // Checking if future is resolved or not
                             if (snapshot.connectionState ==
@@ -229,8 +232,7 @@ class _PrintViewState extends State<PrintView> {
                         child: SizedBox(
                           height: SizeConfig.safeVertical * 0.6,
                           child: FutureBuilder(
-                            future:
-                                _getDocument('$documentUrl${order.cn23}.pdf'),
+                            future: _getDocument('$documentUrl${order.cn23}'),
                             builder: (ctx, snapshot) {
                               // Checking if future is resolved or not
                               if (snapshot.connectionState ==
@@ -269,7 +271,7 @@ class _PrintViewState extends State<PrintView> {
                   ],
                 ),
               ),
-              childCount: order.items.length,
+              childCount: 1,
             ),
           ),
         ],
@@ -279,7 +281,14 @@ class _PrintViewState extends State<PrintView> {
         backgroundColor: const Color.fromARGB(255, 255, 201, 8),
         icon: const FaIcon(FontAwesomeIcons.print),
         label: const Text('Print documents'),
-        onPressed: () {
+        onPressed: () async {
+          // List<Printer> printers = await Printing.info();
+          // for (var printer in printers) {
+          // debugPrint(Printing.info().toString());
+          // Printer printer = const Printer(
+          //   url: '192.168.0.88',
+          // );
+          // Printing.directPrintPdf(printer: printer, onLayout: (_) => _invoice);
           Printing.layoutPdf(onLayout: (_) => _invoice);
           Printing.layoutPdf(onLayout: (_) => _label);
           if (order.cn23 != 'not necessary') {

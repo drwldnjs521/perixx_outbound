@@ -70,12 +70,15 @@ class Order {
   int get hashCode => orderNo.hashCode;
 
   bool containExactlySameItems(List<Item> itemList) {
-    return items.every((item) {
+    final orderItemsHasScannedItems = items.every((item) {
       if (item.article.articleNo == "19999") {
         return true;
       }
       return itemList.contains(item);
     });
+    final scannedItemsHasOrderItems =
+        itemList.every((item) => items.contains(item));
+    return orderItemsHasScannedItems && scannedItemsHasOrderItems;
   }
 
   bool containAllArticle(List<Item> itemList) {

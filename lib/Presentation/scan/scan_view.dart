@@ -23,6 +23,7 @@ class _ScanViewState extends State<ScanView> {
   final _authController = Get.find<AuthController>();
   final _orderController = Get.find<OrderController>();
   final _eanController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   final _itemList = <Item>[];
   final RegExp digitValidator = RegExp("[0-9]+");
   bool isANumber = true;
@@ -74,85 +75,88 @@ class _ScanViewState extends State<ScanView> {
     //           return const Center(child: CircularProgressIndicator());
     //       }
     //     });
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          showAppBar(
-            context,
-            "SCAN",
-          ),
-          _showScanEditor(),
-          if (_itemList.isNotEmpty && !_hasProperOrder) ...[
-            _showOrderToHandle(),
-          ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            showAppBar(
+              context,
+              "SCAN",
+            ),
+            _showScanEditor(),
+            if (_itemList.isNotEmpty && !_hasProperOrder) ...[
+              _showOrderToHandle(),
+            ],
 
-          // SliverToBoxAdapter(
-          //   child: Row(
-          //     children: <Widget>[
-          //       TextField(
-          //         autofocus: true,
-          //         controller: _eanController,
-          //         decoration: const InputDecoration(
-          //           icon: FaIcon(
-          //             FontAwesomeIcons.searchengin,
-          //             size: 50,
-          //           ),
-          //         ),
-          //         style: GoogleFonts.notoSans(
-          //           fontSize: 40,
-          //           fontWeight: FontWeight.w500,
-          //         ),
-          //         textAlign: TextAlign.center,
-          //         onChanged: (value) {
-          //           setState(() {
-          //             scanController.scannedEan.value = value;
-          //           });
-          //         },
-          //       ),
-          //       const SizedBox(
-          //         height: 50,
-          //       ),
-          //       TextButton(
-          //         onPressed: () {
-          //           scanController.addEan(scanController.scannedEan.value);
-          //         },
-          //         child: const Text('ENTER'),
-          //       ),
-          //       const SizedBox(
-          //         height: 50,
-          //       ),
-          //       Expanded(
-          //         child: SizedBox(
-          //           width: 800,
-          //           child: Obx(
-          //             () => ListView.builder(
-          //               scrollDirection: Axis.horizontal,
-          //               itemCount: scanController.eanList.length,
-          //               itemBuilder: (context, index) {
-          //                 return Container(
-          //                   decoration: BoxDecoration(
-          //                     border: Border.all(
-          //                       color: Colors.blue,
-          //                     ),
-          //                     borderRadius: BorderRadius.circular(10.0),
-          //                   ),
-          //                   child: Text(
-          //                     '${scanController.eanList[index]} ',
-          //                     style: GoogleFonts.notoSans(
-          //                       fontSize: 30,
-          //                       fontWeight: FontWeight.w500,
-          //                     ),
-          //                   ),
-          //                 );
-          //               },
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ],
+            // SliverToBoxAdapter(
+            //   child: Row(
+            //     children: <Widget>[
+            //       TextField(
+            //         autofocus: true,
+            //         controller: _eanController,
+            //         decoration: const InputDecoration(
+            //           icon: FaIcon(
+            //             FontAwesomeIcons.searchengin,
+            //             size: 50,
+            //           ),
+            //         ),
+            //         style: GoogleFonts.notoSans(
+            //           fontSize: 40,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //         textAlign: TextAlign.center,
+            //         onChanged: (value) {
+            //           setState(() {
+            //             scanController.scannedEan.value = value;
+            //           });
+            //         },
+            //       ),
+            //       const SizedBox(
+            //         height: 50,
+            //       ),
+            //       TextButton(
+            //         onPressed: () {
+            //           scanController.addEan(scanController.scannedEan.value);
+            //         },
+            //         child: const Text('ENTER'),
+            //       ),
+            //       const SizedBox(
+            //         height: 50,
+            //       ),
+            //       Expanded(
+            //         child: SizedBox(
+            //           width: 800,
+            //           child: Obx(
+            //             () => ListView.builder(
+            //               scrollDirection: Axis.horizontal,
+            //               itemCount: scanController.eanList.length,
+            //               itemBuilder: (context, index) {
+            //                 return Container(
+            //                   decoration: BoxDecoration(
+            //                     border: Border.all(
+            //                       color: Colors.blue,
+            //                     ),
+            //                     borderRadius: BorderRadius.circular(10.0),
+            //                   ),
+            //                   child: Text(
+            //                     '${scanController.eanList[index]} ',
+            //                     style: GoogleFonts.notoSans(
+            //                       fontSize: 30,
+            //                       fontWeight: FontWeight.w500,
+            //                     ),
+            //                   ),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -294,6 +298,8 @@ class _ScanViewState extends State<ScanView> {
                   child: SizedBox(
                     width: SizeConfig.safeHorizontal * 0.8,
                     child: TextField(
+                      focusNode: _focusNode,
+                      autofocus: true,
                       controller: _eanController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
@@ -358,6 +364,7 @@ class _ScanViewState extends State<ScanView> {
                               );
                             }
                             _eanController.clear();
+                            _focusNode.requestFocus();
                           });
                           await _orderController
                               .getOrderExactSameItems(_itemList);
@@ -378,8 +385,6 @@ class _ScanViewState extends State<ScanView> {
                             setState(() {
                               _hasProperOrder = false;
                             });
-                            // await _orderController
-                            //     .getProcessingOrderByEan(_eanList);
                             await _orderController
                                 .getProcessingOrderByItems(_itemList);
                             final orders2 = _orderController.orderList;

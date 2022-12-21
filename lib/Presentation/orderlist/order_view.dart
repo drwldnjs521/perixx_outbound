@@ -200,13 +200,14 @@ class _OrderViewState extends State<OrderView> {
                 ),
               ),
               onHorizontalDragUpdate: (details) async {
-                if (details.delta.direction >= 0) {
-                  if (_orderController.orderList.isNotEmpty) {
-                    await _orderController.updateStatusToShipped(
-                        orderList: _orderController.orderList);
-                    await _orderController.getOrderBetweenByStatus(
-                        start: _startDate, end: _endDate, status: _status);
-                  }
+                if (details.delta.direction >= 0 &&
+                    _orderController.orderList.isNotEmpty) {
+                  _orderController.pageState(AppState.loading);
+                  await _orderController.updateStatusToShipped(
+                      orderList: _orderController.orderList);
+                  await _orderController.getOrderBetweenByStatus(
+                      start: _startDate, end: _endDate, status: _status);
+                  _orderController.pageState(AppState.loaded);
                 }
               },
             )

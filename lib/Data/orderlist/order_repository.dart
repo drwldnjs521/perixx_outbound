@@ -166,9 +166,9 @@ class OrderRepository {
     return orderList;
   }
 
-  Future<List<Order>> getOrderByEan({required List<String> eans}) async {
+  Future<List<Order>> getOrderByEan({required List<String> eanList}) async {
     List<Order> orderList = [];
-    var orders = await _getReferenceNoByEan(eans: eans);
+    var orders = await _getReferenceNoByEan(eanList: eanList);
     var results = await _conn.queryMulti(orderByReferenceNo, orders);
     for (var result in results) {
       result
@@ -179,10 +179,10 @@ class OrderRepository {
   }
 
   Future<List<List<String>>> _getReferenceNoByEan(
-      {required List<String> eans}) async {
+      {required List<String> eanList}) async {
     var orderList = [];
 
-    for (var ean in eans) {
+    for (var ean in eanList) {
       List<String> orders = [];
       var result = await _conn.query(orderByEan, [ean]);
       for (var row in result) {
