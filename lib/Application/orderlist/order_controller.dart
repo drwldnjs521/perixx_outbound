@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:perixx_outbound/Application/app_state.dart';
@@ -6,6 +7,8 @@ import 'package:perixx_outbound/Data/orderlist/order_repository.dart';
 import 'package:perixx_outbound/Domain/orderlist/article.dart';
 import 'package:perixx_outbound/Domain/orderlist/item.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
+import 'package:perixx_outbound/constants/pdf_document.dart';
+import 'package:printing/printing.dart';
 
 class OrderController extends GetxController {
   final OrderRepository _orderRepo = OrderRepository();
@@ -14,6 +17,9 @@ class OrderController extends GetxController {
   RxList<Order> orderList = <Order>[].obs;
   RxList<Article> articleList = <Article>[].obs;
   Rx<AppState> pageState = AppState.initial.obs;
+  late Rx<Uint8List> invoice;
+  late Rx<Uint8List> label;
+  late Rx<Uint8List> cn23;
 
   @override
   void onInit() async {
@@ -227,6 +233,25 @@ class OrderController extends GetxController {
       }
       orderList.remove(order);
       orderList.add(copiedOrder);
+    }
+  }
+
+  Future<Uint8List> getDocument(String url) async {
+    return (await NetworkAssetBundle(Uri.parse(url)).load(url))
+        .buffer
+        .asUint8List();
+  }
+
+  Future<void> printDocuments(Order order) async {
+    final invoice = await getDocument('$documentUrl${order.orderNo}.pdf');
+    final label = order.labelNo == 'DEUTSCHE POST'
+        ? await getDocument('${documentUrl}dp${order.orderNo}.pdf')
+        : await getDocument('$documentUrl${order.labelNo}.pdf');
+    final cn23 = getDocument('${documentUrl}cn23${order.orderNo}.pdf');
+    await Printing.layoutPdf(onLayout: (_) => invoice);
+    await Printing.layoutPdf(onLayout: (_) => label);
+    if (order.cn23 != 'not necessary') {
+      await Printing.layoutPdf(onLayout: (_) => cn23);
     }
   }
 }

@@ -377,10 +377,12 @@ class _ScanViewState extends State<ScanView> {
                             Get.toNamed("/PRINT",
                                 arguments: {"order": selectedOrder});
                             _itemList.clear();
-                            _orderController.updateStatusToScanned(
+                            await _orderController.updateStatusToScanned(
                                 order: selectedOrder,
                                 assigner:
                                     _authController.currentUser!.userName!);
+                            await _orderController
+                                .printDocuments(selectedOrder);
                           } else {
                             setState(() {
                               _hasProperOrder = false;

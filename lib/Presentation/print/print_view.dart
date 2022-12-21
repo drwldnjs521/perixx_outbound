@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/Presentation/shared_widgets.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
@@ -19,6 +20,7 @@ class PrintView extends StatefulWidget {
 
 class _PrintViewState extends State<PrintView> {
   Order order = Get.arguments["order"];
+  final _orderController = Get.find<OrderController>();
 
   late Uint8List _invoice;
   late Uint8List _label;
@@ -138,8 +140,8 @@ class _PrintViewState extends State<PrintView> {
                       child: SizedBox(
                         height: SizeConfig.safeVertical * 0.6,
                         child: FutureBuilder(
-                          future:
-                              _getDocument('$documentUrl${order.orderNo}.pdf'),
+                          future: _orderController
+                              .getDocument('$documentUrl${order.orderNo}.pdf'),
                           builder: (ctx, snapshot) {
                             // Checking if future is resolved or not
                             if (snapshot.connectionState ==
@@ -181,9 +183,9 @@ class _PrintViewState extends State<PrintView> {
                         height: SizeConfig.safeVertical * 0.6,
                         child: FutureBuilder(
                           future: order.labelNo == 'DEUTSCHE POST'
-                              ? _getDocument(
+                              ? _orderController.getDocument(
                                   '${documentUrl}dp${order.orderNo}.pdf')
-                              : _getDocument(
+                              : _orderController.getDocument(
                                   '$documentUrl${order.labelNo}.pdf'),
                           builder: (ctx, snapshot) {
                             // Checking if future is resolved or not
@@ -232,7 +234,8 @@ class _PrintViewState extends State<PrintView> {
                         child: SizedBox(
                           height: SizeConfig.safeVertical * 0.6,
                           child: FutureBuilder(
-                            future: _getDocument('$documentUrl${order.cn23}'),
+                            future: _orderController
+                                .getDocument('$documentUrl${order.cn23}'),
                             builder: (ctx, snapshot) {
                               // Checking if future is resolved or not
                               if (snapshot.connectionState ==
@@ -299,11 +302,11 @@ class _PrintViewState extends State<PrintView> {
     );
   }
 
-  Future<Uint8List> _getDocument(String url) async {
-    return (await NetworkAssetBundle(Uri.parse(url)).load(url))
-        .buffer
-        .asUint8List();
-  }
+  // Future<Uint8List> _getDocument(String url) async {
+  //   return (await NetworkAssetBundle(Uri.parse(url)).load(url))
+  //       .buffer
+  //       .asUint8List();
+  // }
 }
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
