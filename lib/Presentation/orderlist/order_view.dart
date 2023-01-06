@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Application/app_state.dart';
+import 'package:perixx_outbound/Application/login/auth_controller.dart';
 import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
 import 'package:perixx_outbound/Presentation/orderlist/order_list_view.dart';
 import 'package:perixx_outbound/Presentation/shared_widgets.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
+import 'package:perixx_outbound/constants/constant_list.dart';
 
 class OrderView extends StatefulWidget {
   const OrderView({
@@ -20,42 +22,13 @@ class OrderView extends StatefulWidget {
 }
 
 class _OrderViewState extends State<OrderView> {
+  final _authController = Get.find<AuthController>();
   final _orderController = Get.find<OrderController>();
 
   String _startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String _endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   // DropDownItem _status = menus[0];
   String _status = 'all';
-
-  List<String> menus = ['all', 'processing', 'scanned', 'shipped'];
-
-  List<DropdownMenuItem<String>> get _dropdownItems {
-    List<DropdownMenuItem<String>> menuItems = [];
-    for (var menu in menus) {
-      menuItems.addAll(
-        [
-          DropdownMenuItem(
-            value: menu,
-            child: Text(
-              menu,
-              style: GoogleFonts.notoSans(
-                fontSize: SizeConfig.safeHorizontal * 0.05,
-                color: Colors.blueGrey,
-              ),
-            ),
-          ),
-          if (menu != menus.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(
-                color: Color.fromARGB(107, 83, 80, 80),
-              ),
-            ),
-        ],
-      );
-    }
-    return menuItems;
-  }
 
   // List<DropdownMenuItem<DropDownItem>> get _dropdownItems {
   //   List<DropdownMenuItem<DropDownItem>> menuItems = [];
@@ -88,20 +61,6 @@ class _OrderViewState extends State<OrderView> {
 
   //   return menuItems;
   // }
-
-  List<double> get _customsItemsHeight {
-    List<double> itemsHeights = [];
-    for (var i = 0; i < (menus.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(SizeConfig.safeVertical * 0.05);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(SizeConfig.safeVertical * 0.015);
-      }
-    }
-    return itemsHeights;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,6 +171,7 @@ class _OrderViewState extends State<OrderView> {
               },
             )
           : null,
+      drawer: showDrawer(_authController.currentUser),
     );
   }
   //                   } else {
@@ -520,8 +480,8 @@ class _OrderViewState extends State<OrderView> {
                 DropdownButtonHideUnderline(
                   child: DropdownButton2(
                     value: _status,
-                    items: _dropdownItems,
-                    customItemsHeights: _customsItemsHeight,
+                    items: dropdownItems,
+                    customItemsHeights: customsItemsHeight,
                     onChanged: (value) async {
                       setState(() {
                         _status = value as String;

@@ -5,10 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:perixx_outbound/Application/login/auth_controller.dart';
 import 'package:perixx_outbound/Application/orderlist/order_controller.dart';
+import 'package:perixx_outbound/Domain/login/auth_user.dart';
 import 'package:perixx_outbound/Domain/orderlist/order.dart';
 import 'package:perixx_outbound/Presentation/orderlist/order_list_view.dart';
 import 'package:perixx_outbound/Presentation/size_config.dart';
 import 'package:perixx_outbound/Presentation/utilities/dialogs/logout_dialog.dart';
+import 'package:perixx_outbound/constants/constant_list.dart';
 
 Widget showAppBar(
   BuildContext context,
@@ -21,19 +23,25 @@ Widget showAppBar(
     pinned: true,
     floating: true,
     toolbarHeight: SizeConfig.safeVertical * 0.085,
-    leading: Padding(
-      padding: EdgeInsets.fromLTRB(
-        SizeConfig.safeHorizontal * 0.02,
-        SizeConfig.safeVertical * 0.001,
-        SizeConfig.safeHorizontal * 0.02,
-        SizeConfig.safeVertical * 0.001,
-      ),
-      child: IconButton(
-        icon: const FaIcon(FontAwesomeIcons.bars),
-        iconSize: SizeConfig.safeHorizontal * 0.08,
-        tooltip: 'Menu',
-        onPressed: () {},
-      ),
+    leading: Builder(
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            SizeConfig.safeHorizontal * 0.02,
+            SizeConfig.safeVertical * 0.001,
+            SizeConfig.safeHorizontal * 0.02,
+            SizeConfig.safeVertical * 0.001,
+          ),
+          child: IconButton(
+            icon: const FaIcon(FontAwesomeIcons.bars),
+            iconSize: SizeConfig.safeHorizontal * 0.08,
+            tooltip: 'Menu',
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        );
+      },
     ), //IconButton
     actions: <Widget>[
       Padding(
@@ -231,7 +239,7 @@ Widget showOrder(
                   onPressed: () =>
                       Get.toNamed("/PRINT", arguments: {"order": order}),
                   label: Text(
-                    'Go to print',
+                    'print'.tr,
                     style: GoogleFonts.notoSans(
                       fontWeight: FontWeight.w800,
                       fontSize: SizeConfig.safeHorizontal * 0.035,
@@ -258,7 +266,7 @@ Widget _buildTitle(Order order) {
     children: <Widget>[
       Text.rich(
         TextSpan(
-          text: 'Order ID : ',
+          text: 'orderID'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -276,7 +284,7 @@ Widget _buildTitle(Order order) {
       ),
       Text.rich(
         TextSpan(
-          text: 'Shipped to : ',
+          text: 'shippedTo'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -294,7 +302,7 @@ Widget _buildTitle(Order order) {
       ),
       Text.rich(
         TextSpan(
-          text: 'Ordered Date : ',
+          text: 'orderedDate'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -312,7 +320,7 @@ Widget _buildTitle(Order order) {
       ),
       Text.rich(
         TextSpan(
-          text: 'Order Status : ',
+          text: 'status'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -331,7 +339,7 @@ Widget _buildTitle(Order order) {
       ),
       Text.rich(
         TextSpan(
-          text: 'Assigner : ',
+          text: 'assigner'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -349,7 +357,7 @@ Widget _buildTitle(Order order) {
       ),
       Text.rich(
         TextSpan(
-          text: 'Shipped On : ',
+          text: 'shippedDate'.tr,
           style: GoogleFonts.notoSans(
             fontSize: SizeConfig.safeHorizontal * 0.03,
             fontWeight: FontWeight.w600,
@@ -824,3 +832,75 @@ Widget orderDetails(Order order) {
 //     ),
 //   );
 // }
+
+Widget showDrawer(AuthUser? user) {
+  return Drawer(
+    elevation: 40,
+    width: SizeConfig.safeVertical * 0.32,
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          currentAccountPicture: const CircleAvatar(
+            backgroundImage: AssetImage("assets/perixx_profile.jpg"),
+          ),
+          accountName: Text(user?.userName ?? 'default'),
+          accountEmail: Text(user?.email ?? 'default@perixx.com'),
+          decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 101, 101, 101),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              )),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.safeVertical * 0.02,
+            left: SizeConfig.safeHorizontal * 0.05,
+          ),
+          child: Text(
+            'language'.tr,
+            style: GoogleFonts.notoSans(
+              fontSize: SizeConfig.safeHorizontal * 0.045,
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 255, 91, 45),
+            ),
+          ),
+        ),
+        ListView.separated(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.safeVertical * 0.009,
+            ),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.all(SizeConfig.safeHorizontal * 0.05),
+                child: GestureDetector(
+                  child: Text(
+                    locale[index]['name'],
+                    style: GoogleFonts.notoSans(
+                      fontSize: SizeConfig.safeHorizontal * 0.04,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 14, 24, 72),
+                    ),
+                  ),
+                  onTap: () {
+                    Get.updateLocale(locale[index]['locale']);
+                  },
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.safeHorizontal * 0.05),
+                child: const Divider(
+                  color: Color.fromARGB(255, 1, 19, 33),
+                ),
+              );
+            },
+            itemCount: locale.length),
+      ],
+    ),
+  );
+}

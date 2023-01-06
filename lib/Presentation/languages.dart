@@ -22,6 +22,14 @@ class Languages extends Translations {
               'The data is already saved in the perixx system',
           'not_valid_ean': 'Please scan a valid article',
           'swipe': 'Please swipe to ship the orders',
+          'print': 'print documents',
+          'orderID': 'Order No. : ',
+          'shippedTo': 'Shipped To : ',
+          'orderedDate': 'Ordered Date : ',
+          'status': 'Status : ',
+          'assigner': 'Assigner : ',
+          'shippedDate': 'Sipped Date : ',
+          'language': 'Language setting : ',
         },
         'ge_GE': {
           'greeting': 'Hallo',
@@ -44,6 +52,14 @@ class Languages extends Translations {
               'Die Daten sind bereits im perixx-System gespeichert',
           'not_valid_ean': 'Bitte einen gültigen Artikel scannen',
           'swipe': 'Bitte wischen Sie, um die Bestellungen zu schicken',
+          'print': 'Dokumente drucken',
+          'orderID': 'BestellNr. : ',
+          'shippedTo': 'Versandt nach : ',
+          'orderedDate': 'Bestelldatum : ',
+          'status': 'Status : ',
+          'assigner': 'Arbeiter : ',
+          'shippedDate': 'Versanddatum : ',
+          'language': 'Sprache Einstellung : ',
         }
       };
 }

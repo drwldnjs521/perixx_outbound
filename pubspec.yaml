@@ -52,7 +52,8 @@ dependencies:
   printing: ^5.9.3
   google_nav_bar: ^5.0.6
   badges: ^2.0.3
-  pdf: ^3.8.4
+  mocktail: ^0.3.0
+
 
 
 

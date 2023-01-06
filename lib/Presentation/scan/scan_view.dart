@@ -157,6 +157,7 @@ class _ScanViewState extends State<ScanView> {
             // ),
           ],
         ),
+        drawer: showDrawer(_authController.currentUser),
       ),
     );
   }
@@ -192,69 +193,69 @@ class _ScanViewState extends State<ScanView> {
                 IntrinsicHeight(
                   // child: SizedBox(
                   //   width: SizeConfig.safeHorizontal * 0.8,
-                  //   child: RawKeyboardListener(
-                  //     autofocus: true,
-                  //     focusNode: FocusNode(onKey: (node, event) {
-                  //       if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                  //         return KeyEventResult
-                  //             .handled; // prevent passing the event into the TextField
-                  //       }
-                  //       return KeyEventResult
-                  //           .ignored; // pass the event to the TextField
-                  //     }),
-                  //     onKey: (event) async {
-                  //       if (event.isKeyPressed(LogicalKeyboardKey.enter) &&
-                  //           _eanController.text.isNotEmpty) {
-                  //         setState(() {
-                  //           final article = _orderController
-                  //               .getArticleByEan(_eanController.text);
-                  //           if (article != null) {
-                  //             _itemList.addItem(
-                  //               Item(
-                  //                 article: article,
-                  //                 qty: 1,
-                  //               ),
-                  //             );
-                  //           } else {
-                  //             openSnackbar(
-                  //               title: 'warning'.tr,
-                  //               message: 'no_article_found'.tr,
-                  //             );
-                  //           }
-                  //           _eanController.clear();
-                  //         });
-                  //         await _orderController
-                  //             .getOrderExactSameItems(_itemList);
-                  //         final orders1 = _orderController.orderList;
-                  //         if (orders1.isNotEmpty) {
-                  //           setState(() {
-                  //             _hasProperOrder = true;
-                  //           });
-                  //           final selectedOrder = _orderController.orderList[0];
-                  //           Get.toNamed("/PRINT",
-                  //               arguments: {"order": selectedOrder});
-                  //           _itemList.clear();
-                  //           _orderController.updateStatusToScanned(
-                  //               order: selectedOrder,
-                  //               assigner:
-                  //                   _authController.currentUser!.userName!);
-                  //         } else {
-                  //           setState(() {
-                  //             _hasProperOrder = false;
-                  //           });
-                  //           // await _orderController
-                  //           //     .getProcessingOrderByEan(_eanList);
-                  //           await _orderController
-                  //               .getProcessingOrderByItems(_itemList);
-                  //           final orders2 = _orderController.orderList;
-                  //           if (orders2.isNotEmpty) {
-                  //             setState(() {
-                  //               _showOrders = true;
-                  //             });
-                  //           }
-                  //         }
-                  //       }
-                  //     },
+                  //   // child: RawKeyboardListener(
+                  //   //   autofocus: true,
+                  //   //   // focusNode: FocusNode(onKey: (node, event) {
+                  //   //   //   if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                  //   //   //     return KeyEventResult
+                  //   //   //         .handled; // prevent passing the event into the TextField
+                  //   //   //   }
+                  //   //   //   return KeyEventResult
+                  //   //   //       .ignored; // pass the event to the TextField
+                  //   //   // }),
+                  //   //   focusNode: _focusNode,
+                  //   //   onKey: (event) async {
+                  //   //     if (_eanController.text.isNotEmpty) {
+                  //   //       setState(() {
+                  //   //         final article = _orderController
+                  //   //             .getArticleByEan(_eanController.text);
+                  //   //         if (article != null) {
+                  //   //           _itemList.addItem(
+                  //   //             Item(
+                  //   //               article: article,
+                  //   //               qty: 1,
+                  //   //             ),
+                  //   //           );
+                  //   //         } else {
+                  //   //           openSnackbar(
+                  //   //             title: 'warning'.tr,
+                  //   //             message: 'no_article_found'.tr,
+                  //   //           );
+                  //   //         }
+                  //   //         _eanController.clear();
+                  //   //       });
+                  //   //       await _orderController
+                  //   //           .getOrderExactSameItems(_itemList);
+                  //   //       final orders1 = _orderController.orderList;
+                  //   //       if (orders1.isNotEmpty) {
+                  //   //         setState(() {
+                  //   //           _hasProperOrder = true;
+                  //   //         });
+                  //   //         final selectedOrder = _orderController.orderList[0];
+                  //   //         Get.toNamed("/PRINT",
+                  //   //             arguments: {"order": selectedOrder});
+                  //   //         _itemList.clear();
+                  //   //         _orderController.updateStatusToScanned(
+                  //   //             order: selectedOrder,
+                  //   //             assigner:
+                  //   //                 _authController.currentUser!.userName!);
+                  //   //       } else {
+                  //   //         setState(() {
+                  //   //           _hasProperOrder = false;
+                  //   //         });
+                  //   //         // await _orderController
+                  //   //         //     .getProcessingOrderByEan(_eanList);
+                  //   //         await _orderController
+                  //   //             .getProcessingOrderByItems(_itemList);
+                  //   //         final orders2 = _orderController.orderList;
+                  //   //         if (orders2.isNotEmpty) {
+                  //   //           setState(() {
+                  //   //             _showOrders = true;
+                  //   //           });
+                  //   //         }
+                  //   //       }
+                  //   //     }
+                  //   //   },
                   //     child: TextField(
                   //       controller: _eanController,
                   //       decoration: InputDecoration(
@@ -298,6 +299,7 @@ class _ScanViewState extends State<ScanView> {
                   child: SizedBox(
                     width: SizeConfig.safeHorizontal * 0.8,
                     child: TextField(
+                      textInputAction: TextInputAction.done,
                       focusNode: _focusNode,
                       autofocus: true,
                       controller: _eanController,
@@ -329,13 +331,6 @@ class _ScanViewState extends State<ScanView> {
                             style: BorderStyle.solid,
                           ),
                         ),
-
-                        // onChanged: (value) {
-                        //   setState(() {
-                        //     _scannedEan = value;
-                        //     _textController.clear();
-                        //   });
-                        // },
                       ),
                       style: CustomTheme.theme.textTheme.labelLarge,
                       onChanged: (input) {

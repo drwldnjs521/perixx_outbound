@@ -283,7 +283,7 @@ class _PrintViewState extends State<PrintView> {
         elevation: 40,
         backgroundColor: const Color.fromARGB(255, 255, 201, 8),
         icon: const FaIcon(FontAwesomeIcons.print),
-        label: const Text('Print documents'),
+        label: Text('print'.tr),
         onPressed: () async {
           // List<Printer> printers = await Printing.info();
           // for (var printer in printers) {
@@ -464,7 +464,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           ),
           alignment: Alignment.bottomCenter,
           child: Text(
-            'Order No. ${order.orderNo}',
+            "${'orderID'.tr} ${order.orderNo}",
             style: TextStyle.lerp(
               GoogleFonts.notoSans(
                 fontSize: SizeConfig.safeHorizontal * 0.05,

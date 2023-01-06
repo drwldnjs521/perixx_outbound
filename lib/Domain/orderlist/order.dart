@@ -8,7 +8,6 @@ import 'package:perixx_outbound/constants/mysql_crud.dart';
 class Order {
   final DateTime createdDate;
   final String orderNo;
-  // final Status status;
   final List<Item> items;
   final String labelNo;
   final String shippedTo;
